@@ -1,0 +1,39 @@
+# Prevent Directory Listing
+Options -Indexes
+
+# Disable PHP Execution Engine (Apache module specific)
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>
+
+# Block access to executable extensions (Case insensitive)
+<FilesMatch "(?i)\.(php|php[0-9]|phtml|pl|py|jsp|asp|htm|html|shtml|sh|cgi|phar|exe|bat|cmd)$">
+    Require all denied
+</FilesMatch>
+
+# Caching for static assets and generated webp
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 month"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType video/mp4 "access plus 7 days"
+    ExpiresByType video/webm "access plus 7 days"
+</IfModule>
+
+<IfModule mod_headers.c>
+    <FilesMatch "(?i)\.(webp|jpg|jpeg|png|gif)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+    <FilesMatch "(?i)\.(mp4|webm)$">
+        Header set Cache-Control "public, max-age=604800"
+    </FilesMatch>
+</IfModule>

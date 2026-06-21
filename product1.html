@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRANT FASHIONS | Abaya & Magauni</title>
+
+    
+    <meta name="description" content="Grant Fashions - Elegant Abayas &amp; Gowns">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Social -->
+    <meta property="og:title" content="GRANT FASHIONS">
+    <meta property="og:description" content="Grant Fashions - Elegant Abayas &amp; Gowns">
+    <meta property="og:image" content="https://via.placeholder.com/1200x630?text=GRANT+FASHIONS">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+    "@context": "https://schema.org",
+    "@type": "Store",
+    "name": "GRANT FASHIONS",
+    "url": "http://localhost/grant_folder-main",
+    "logo": "https://via.placeholder.com/1200x630?text=GRANT+FASHIONS",
+    "telephone": "0767557234"
+}    </script>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script>
+        // Check local storage or system preference immediately to prevent flash
+        const currentTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-bs-theme', currentTheme);
+        
+        // Add attribute to enable transition disabling during theme changes
+        document.documentElement.setAttribute('data-bs-theme-transition', 'true');
+    </script>
+    <style>
+        /* Custom styles for mobile layout requirement */
+        .dropdown-toggle.no-caret::after { display: none; }
+        .navbar-brand { font-size: 1.1rem; }
+        @media (max-width: 991.98px) {
+            .navbar-brand { text-align: center; margin-right: 0; }
+            .customer-action-icons .bi { font-size: 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="theme-status" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
+
+<script>
+    // Expose whether current user is admin and csrf token for save API
+    window.isAdmin = false;
+    window.csrfToken = "";
+</script>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
+  <div class="container d-flex align-items-center">
+    <!-- 1. Mobile Menu Toggle (Visible only below LG) -->
+    <button class="navbar-toggler border-0 p-0 me-2 shadow-none d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
+      <span class="navbar-toggler-icon" style="width: 1.25rem; height: 1.25rem;"></span>
+    </button>
+
+    <!-- 2. Brand Name (Centered on mobile) -->
+    <a class="navbar-brand d-flex align-items-center m-0 flex-grow-1 flex-lg-grow-0 text-center text-lg-start" href="index.php">
+                <span class="fw-bold brand-text-responsive" style="font-family: 'Playfair Display', serif;">GRANT FASHIONS</span>
+    </a>
+
+    <!-- 3. Desktop Navigation Links (Hidden on Mobile) -->
+    <div class="collapse navbar-collapse d-none d-lg-flex ms-lg-4" id="desktopNav">
+      <ul class="navbar-nav gap-lg-4">
+        <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
+        
+        <!-- Shop Dropdown for Desktop -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="shopDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Shop          </a>
+          <ul class="dropdown-menu border-0 shadow-sm mt-2" aria-labelledby="shopDropdown">
+            <li><a class="dropdown-item py-2" href="shop.php">All Products</a></li>
+            <li><hr class="dropdown-divider opacity-25"></li>
+            <li><a class="dropdown-item py-2" href="shop.php?category=abaya">Abaya</a></li>
+            <li><a class="dropdown-item py-2" href="shop.php?category=gown">Gowns</a></li>
+            <li><a class="dropdown-item py-2" href="shop.php?category=guberi">Guberi</a></li>
+            <li><a class="dropdown-item py-2" href="shop.php?category=two_pieces">Two Pieces</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item"><a class="nav-link fw-bold text-gold" href="index.php#preorder">Pre-Order</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.php">About Us</a></li>
+      </ul>
+    </div>
+
+    <!-- 4. Quick Actions (Right - Always visible on all devices) -->
+    <div class="customer-action-icons d-flex align-items-center gap-2 gap-md-3 ms-auto order-lg-last">
+        <button class="btn btn-link text-dark p-1 border-0 shadow-none" id="theme-toggle" title="Badili Muonekano">
+            <i class="bi bi-moon-stars-fill"></i>
+        </button>
+        <a href="cart.php" class="btn btn-link text-dark p-1 border-0 shadow-none position-relative">
+            <i class="bi bi-bag"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.55rem;">0</span>
+        </a>
+        <div class="dropdown">
+            <button class="btn btn-link text-dark p-1 border-0 shadow-none dropdown-toggle no-caret" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-globe"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                <li><a class="dropdown-item" href="?lang=en">English</a></li>
+                <li><a class="dropdown-item" href="?lang=sw">Kiswahili</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 5. The Modern Mobile Sidebar (Offcanvas - Hidden on Desktop) -->
+    <div class="offcanvas offcanvas-start border-0 d-lg-none" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel">
+      <div class="offcanvas-header border-bottom py-3">
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <h5 class="offcanvas-title fw-bold mx-auto ps-0 text-uppercase tracking-wider" id="mobileSidebarLabel" style="font-family: 'Playfair Display', serif;">
+            GRANT FASHIONS        </h5>
+      </div>
+      
+      <div class="offcanvas-body d-flex flex-column p-0">
+        <ul class="navbar-nav sidebar-nav">
+          <li class="nav-item">
+            <a class="nav-link px-4 py-3" href="index.php"><i class="bi bi-house-door me-3"></i> Home</a>
+          </li>
+          
+          <!-- Shop with Sub-categories (Collapsible for Mobile) -->
+          <li class="nav-item">
+            <a class="nav-link px-4 py-3 d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#shopMobileCollapse" role="button" aria-expanded="false" aria-controls="shopMobileCollapse">
+                <span><i class="bi bi-bag me-3"></i> Shop</span>
+                <i class="bi bi-chevron-down small transition-icon"></i>
+            </a>
+            <div class="collapse" id="shopMobileCollapse">
+                <ul class="list-unstyled ps-5 pb-2 sidebar-sub-nav">
+                    <li><a href="shop.php" class="nav-link py-2">All Products</a></li>
+                    <li><a href="shop.php?category=abaya" class="nav-link py-2">Abaya</a></li>
+                    <li><a href="shop.php?category=gown" class="nav-link py-2">Gowns</a></li>
+                    <li><a href="shop.php?category=two_pieces" class="nav-link py-2">Two Pieces</a></li>
+                    <li><a href="shop.php?category=guberi" class="nav-link py-2">Guberi</a></li>
+                </ul>
+            </div>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link px-4 py-3 fw-bold text-gold" href="index.php#preorder"><i class="bi bi-star me-3"></i> Pre-Order</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link px-4 py-3" href="about.php"><i class="bi bi-info-circle me-3"></i> About Us</a>
+          </li>
+
+          <!-- Language Section at Bottom -->
+          <li class="mt-auto border-top pt-3 pb-4">
+            <div class="px-4 mb-2 small text-muted text-uppercase fw-bold tracking-wider">
+                <i class="bi bi-globe me-2"></i> Language            </div>
+            <div class="d-flex px-4 gap-3">
+                <a href="?lang=en" class="btn btn-sm btn-dark rounded-pill px-3">English</a>
+                <a href="?lang=sw" class="btn btn-sm btn-outline-dark rounded-pill px-3">Kiswahili</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div> <!-- End Container -->
+</nav>
+<div style="margin-top: 80px;"></div> <!-- Spacer for fixed navbar -->
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggle = document.getElementById('theme-toggle');
+            const icon = themeToggle.querySelector('i');
+            const html = document.documentElement;
+            const themeStatus = document.getElementById('theme-status');
+            const navbar = document.querySelector('.navbar');
+
+            // Normalize initial state from data attribute or localStorage
+            const saved = localStorage.getItem('theme');
+            if (saved) {
+                html.setAttribute('data-bs-theme', saved);
+                html.classList.toggle('theme-dark', saved === 'dark');
+                html.classList.toggle('theme-light', saved === 'light');
+            }
+
+            // Set initial icon and navbar classes
+            if (html.getAttribute('data-bs-theme') === 'dark' || html.classList.contains('theme-dark')) {
+                try { icon.classList.replace('bi-moon-stars-fill', 'bi-sun-fill'); } catch(e){}
+                if (navbar) navbar.classList.add('navbar-dark', 'bg-dark');
+                if (navbar) navbar.classList.remove('navbar-light', 'bg-white');
+                document.querySelectorAll('.customer-action-icons .text-dark').forEach(el => el.classList.replace('text-dark', 'text-light'));
+            }
+
+            themeToggle.addEventListener('click', () => {
+                // Disable transitions during theme change
+                html.setAttribute('data-bs-theme-transition', 'true');
+                
+                const currentTheme = html.getAttribute('data-bs-theme') || (html.classList.contains('theme-dark') ? 'dark' : 'light');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                const actionIcons = document.querySelectorAll('.customer-action-icons .btn-link, .customer-action-icons a');
+                
+                html.setAttribute('data-bs-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+
+                // Maintain class-based toggle for older CSS selectors
+                html.classList.toggle('theme-dark', newTheme === 'dark');
+                html.classList.toggle('theme-light', newTheme === 'light');
+
+                // Toggle Icon and navbar
+                if (newTheme === 'dark') {
+                    try { icon.classList.replace('bi-moon-stars-fill', 'bi-sun-fill'); } catch(e){}
+                    if (navbar) { navbar.classList.add('navbar-dark', 'bg-dark'); navbar.classList.remove('navbar-light', 'bg-white'); }
+                    actionIcons.forEach(el => el.classList.replace('text-dark', 'text-light'));
+                    if (themeStatus) themeStatus.textContent = 'Dark mode activated';
+                } else {
+                    try { icon.classList.replace('bi-sun-fill', 'bi-moon-stars-fill'); } catch(e){}
+                    if (navbar) { navbar.classList.remove('navbar-dark', 'bg-dark'); navbar.classList.add('navbar-light', 'bg-white'); }
+                    actionIcons.forEach(el => el.classList.replace('text-light', 'text-dark'));
+                    if (themeStatus) themeStatus.textContent = 'Light mode activated';
+                }
+
+                // Persist preference server-side for logged-in admins
+                try {
+                    if (window.isAdmin) {
+                        fetch('includes/save_theme.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: 'theme=' + encodeURIComponent(newTheme) + '&csrf_token=' + encodeURIComponent(window.csrfToken || '')
+                        }).then(r => r.json()).then(j => {
+                            if (!j.ok) console.warn('Theme save:', j);
+                        }).catch(e => console.warn('Theme save failed', e));
+                    }
+                } catch(e){}
+                
+                // Re-enable transitions after a short delay and clear announcement
+                setTimeout(() => {
+                    html.removeAttribute('data-bs-theme-transition');
+                    if (themeStatus) themeStatus.textContent = '';
+                }, 300);
+            });
+        });
+</script>
+
+<div class="container py-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.php" class="text-decoration-none text-muted">Home</a></li>
+            <li class="breadcrumb-item"><a href="shop.php" class="text-decoration-none text-muted">Shop</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Classic Abaya</li>
+        </ol>
+    </nav>
+
+    <!-- Display Error Message if exists -->
+    
+    
+    
+    <div class="row mt-4">
+        <!-- Sehemu ya Picha -->
+        <div class="col-md-6 mb-4">
+            <style>
+                .zoom-container { overflow: hidden; cursor: crosshair; }
+                .zoom-container img { transition: transform 0.3s ease-out; }
+                /* Wakati wa hover, punguza muda wa transition ili iwe responsive kwenye mouse movement */
+                .zoom-container:hover img { transition: transform 0.05s linear; }
+            </style>
+            <div class="card border-0 shadow-sm zoom-container">
+                <picture><source type="image/webp" srcset="uploads/webp/320_69cbe319476fe.webp 320w, uploads/webp/640_69cbe319476fe.webp 640w, uploads/webp/1024_69cbe319476fe.webp 1024w, uploads/webp/1600_69cbe319476fe.webp 1600w" sizes="(max-width: 768px) 100vw, 50vw"><img src="uploads/69cbe319476fe.png" srcset="uploads/69cbe319476fe.png 320w, uploads/69cbe319476fe.png 640w, uploads/69cbe319476fe.png 1024w, uploads/69cbe319476fe.png 1600w" sizes="(max-width: 768px) 100vw, 50vw" class="card-img-top rounded" alt="Classic Abaya" loading="lazy"></picture>            </div>
+            
+                        <div class="d-flex gap-2 mt-3 overflow-auto pb-2">
+                <!-- Picha Kuu (Thumbnail) -->
+                <picture><source type="image/webp" srcset="uploads/webp/320_69cbe319476fe.webp 320w, uploads/webp/640_69cbe319476fe.webp 640w, uploads/webp/1024_69cbe319476fe.webp 1024w, uploads/webp/1600_69cbe319476fe.webp 1600w" sizes="80px"><img src="uploads/69cbe319476fe.png" srcset="uploads/69cbe319476fe.png 320w, uploads/69cbe319476fe.png 640w, uploads/69cbe319476fe.png 1024w, uploads/69cbe319476fe.png 1600w" sizes="80px" class="rounded border gallery-thumb" alt="Classic Abaya" loading="lazy"></picture>                     
+                <!-- Picha za Gallery -->
+                                <picture><source type="image/webp" srcset="uploads/webp/320_69cbe319476fe.webp 320w, uploads/webp/640_69cbe319476fe.webp 640w, uploads/webp/1024_69cbe319476fe.webp 1024w, uploads/webp/1600_69cbe319476fe.webp 1600w" sizes="80px"><img src="uploads/69cbe319476fe.png" srcset="uploads/69cbe319476fe.png 320w, uploads/69cbe319476fe.png 640w, uploads/69cbe319476fe.png 1024w, uploads/69cbe319476fe.png 1600w" sizes="80px" class="rounded border gallery-thumb" alt="Classic Abaya" loading="lazy"></picture>                            </div>
+                    </div>
+
+        <!-- Sehemu ya Maelezo na Chaguzi -->
+        <div class="col-md-6">
+            <h1 class="display-5 fw-bold" style="font-family: 'Playfair Display', serif;">
+                Classic Abaya                                                            <span class="badge bg-danger fs-6 align-middle ms-2">10% OFF</span>
+                                                </h1>
+            <div class="mb-3">
+                <span class="badge bg-dark text-uppercase tracking-wide">abaya</span>
+                            </div>
+             
+            <!-- Star Rating Display -->
+            <div class="mb-3 text-warning">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                <span class="text-muted small ms-2">(1 reviews)</span>
+            </div>
+
+                                            <h2 class="mb-4">
+                    <span class="text-decoration-line-through text-muted fs-4 me-2">Tsh 50,000</span>
+                    <span class="text-danger fw-bold">Tsh 45,000</span>
+                </h2>
+            
+            <!-- Countdown Timer -->
+                                    
+            <p class="lead text-muted mb-4">
+                Elegant black abaya with embroidery            </p>
+
+            <hr class="my-4">
+
+            <!-- Fomu ya Kuchagua (Size, Color, Quantity) -->
+            <form action="cart.php" method="POST">
+                <input type="hidden" name="token" value="c63b04bd33241c2ecfead30304edcd9bc8961da927cc73dd2f206dddc15d4205">
+                <input type="hidden" name="product_id" value="1">
+                <input type="hidden" name="product_name" value="Classic Abaya">
+                <input type="hidden" name="product_price" value="45000">
+                <input type="hidden" name="product_code" value="">
+
+                <!-- 1. Choose Size -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold text-uppercase small">Choose Size</label>
+                    <div class="d-flex gap-2">
+                                            </div>
+                </div>
+
+                <!-- 2. Choose Color -->
+                <div class="mb-4">
+                    <label for="color" class="form-label fw-bold text-uppercase small">Choose Color</label>
+                    <select class="form-select rounded-0 w-75" name="color" id="color" required>
+                        <option value="" selected disabled>-- Choose Color --</option>
+                                            </select>
+                </div>
+
+                <!-- 3. Chagua Quantity -->
+                <div class="mb-4">
+                    <label for="quantity" class="form-label fw-bold text-uppercase small">Quantity</label>
+                    <div class="input-group w-50">
+                        <button class="btn btn-outline-secondary rounded-0" type="button" onclick="this.parentNode.querySelector('input[type=number]').stepDown()">-</button>
+                        <input type="number" class="form-control text-center rounded-0 border-secondary" name="quantity" id="quantity" value="1" min="1" max="3" onchange="validateQuantity(this)">
+                        <button class="btn btn-outline-secondary rounded-0" type="button" onclick="incrementQuantity()">+</button>
+                    </div>
+                </div>
+
+                <!-- Vitufe vya Kununua -->
+                <div class="d-grid gap-3 mt-5">
+                    <button type="submit" name="add_to_cart" class="btn btn-dark btn-lg rounded-0 text-uppercase tracking-wide py-3">
+                        Add to Cart                    </button>
+                    <!-- WhatsApp Button (Njia ya haraka) -->
+                                        <a href="https://wa.me/255767557234?text=Hello%2C+I+need+Classic+Abaya" class="btn btn-success btn-lg rounded-0 text-uppercase tracking-wide py-3">
+                        <i class="bi bi-whatsapp"></i> Buy with WhatsApp                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="fw-bold border-bottom pb-3 mb-4">Customer Reviews</h3>
+        </div>
+        <div class="col-md-6">
+                                            <div class="card border-0 shadow-sm mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="fw-bold">Asha</h6>
+                            <small class="text-muted">12 Jun 2026</small>
+                        </div>
+                        <div class="text-warning mb-2 small">
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                    </div>
+                        <p class="mb-0 text-muted">Beautiful quality and fast delivery. Highly recommend!</p>
+                    </div>
+                </div>
+                                    </div>
+        <div class="col-md-6">
+            <div class="card bg-light border-0 rounded-4 p-4">
+                <h5 class="fw-bold mb-3">Write Your Review</h5>
+                <form method="POST">
+                    <input type="hidden" name="token" value="c63b04bd33241c2ecfead30304edcd9bc8961da927cc73dd2f206dddc15d4205">
+                     
+                    <!-- Honeypot Field (Hidden from humans) -->
+                    <div style="display: none;" aria-hidden="true">
+                        <input type="text" name="email_confirm" tabindex="-1" autocomplete="off">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Your Name</label>
+                        <input type="text" name="reviewer_name" class="form-control" required maxlength="100">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Rating</label>
+                        <select name="rating" class="form-select" required>
+                            <option value="5">5 - Excellent</option>
+                            <option value="4">4 - Good</option>
+                            <option value="3">3 - Average</option>
+                            <option value="2">2 - Poor</option>
+                            <option value="1">1 - Very Poor</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label d-flex justify-content-between">
+                            review                            <small class="text-muted"><span id="charCount">0</span>/500</small>
+                        </label>
+                        <textarea name="comment" id="reviewComment" class="form-control" rows="3" required maxlength="500"></textarea>
+                    </div>
+                    <button type="submit" name="submit_review" class="btn btn-dark rounded-pill px-4">Submit Review</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function changeImage(src) {
+    document.getElementById('mainImage').src = src;
+}
+
+function validateQuantity(input) {
+    if (parseInt(input.value) > 3) {
+        alert("Quantity should not exceed 3 per order.");
+        input.value = 3;
+    }
+}
+
+function incrementQuantity() {
+    const input = document.getElementById('quantity');
+    if (parseInt(input.value) < 3) {
+        input.stepUp();
+    } else {
+        alert("Quantity should not exceed 3 per order.");
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const reviewAlert = document.querySelector('.alert-review-success');
+    if (reviewAlert) {
+        setTimeout(() => {
+            const alert = new bootstrap.Alert(reviewAlert);
+            alert.close();
+        }, 5000); // 5000ms = sekunde 5
+    }
+
+    const reviewTextarea = document.getElementById('reviewComment');
+    const charCount = document.getElementById('charCount');
+    if (reviewTextarea && charCount) {
+        reviewTextarea.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+        });
+    }
+});
+
+
+// Image Zoom Script
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.querySelector('.zoom-container');
+    const img = document.getElementById('mainImage');
+
+    if (container && img) {
+        container.addEventListener('mousemove', (e) => {
+            const { left, top, width, height } = container.getBoundingClientRect();
+            const x = ((e.clientX - left) / width) * 100;
+            const y = ((e.clientY - top) / height) * 100;
+            img.style.transformOrigin = `${x}% ${y}%`;
+            img.style.transform = 'scale(2)';
+        });
+
+        container.addEventListener('mouseleave', () => {
+            img.style.transformOrigin = 'center center';
+            img.style.transform = 'scale(1)';
+        });
+    }
+});
+</script>
+
+<footer class="bg-dark text-white py-5 mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <h5 class="text-uppercase" style="font-family: 'Playfair Display', serif;">GRANT FASHIONS</h5>
+                <p class="small text-white-50">We bring modern and elegant fashion. Premium abayas and gowns in town.</p>
+            </div>
+            <div class="col-md-4 mb-3">
+                <h5>Contact Information</h5>
+                <ul class="list-unstyled small text-white-50">
+                    <li><i class="bi bi-geo-alt me-2"></i> Dar es Salaam, Tanzania</li>
+                    <li><i class="bi bi-whatsapp me-2"></i> 0767557234</li>
+                </ul>
+            </div>
+        </div>
+        <hr class="border-secondary">
+        <p class="text-center small text-white-50 mb-0">&copy; 2026 GRANT FASHIONS. All Rights Reserved.</p>
+    </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Scroll to Top Button -->
+<a href="#" id="scrollToTopBtn" class="btn btn-dark rounded-circle shadow-lg" title="Back to Top">
+    <i class="bi bi-arrow-up"></i>
+</a>
+
+<script>
+    // Scroll to Top Button Logic
+    const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+    window.onscroll = function() {
+        if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+            scrollToTopBtn.style.display = "block";
+        } else {
+            scrollToTopBtn.style.display = "none";
+        }
+    };
+
+    scrollToTopBtn.addEventListener("click", function(e) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+</script>
+</body>
+</html>

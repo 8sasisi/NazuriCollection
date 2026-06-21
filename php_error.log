@@ -1,0 +1,4 @@
+[21-Jun-2026 11:57:53 UTC] Fatal Error: Cannot redeclare t() (previously declared in C:\wamp64\www\grant_folder-main\includes\functions.php:43)
+[21-Jun-2026 11:58:18 UTC] Fatal Error: Cannot redeclare t() (previously declared in C:\wamp64\www\grant_folder-main\includes\functions.php:43)
+[21-Jun-2026 11:58:58 UTC] Fatal Error: Cannot redeclare t() (previously declared in C:\wamp64\www\grant_folder-main\includes\functions.php:43)
+[21-Jun-2026 12:03:50 UTC] Fatal Error: Cannot redeclare t() (previously declared in C:\wamp64\www\grant_folder-main\includes\functions.php:43)
