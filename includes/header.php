@@ -37,7 +37,7 @@ foreach ($settings_rows as $row) {
     $site_settings[$row['setting_key']] = $row['setting_value'];
 }
 
-$shop_name = !empty($site_settings['shop_name']) ? $site_settings['shop_name'] : 'GRANT FASHIONS';
+$shop_name = !empty($site_settings['shop_name']) ? $site_settings['shop_name'] : 'Nazuri Collections';
 $shop_logo = !empty($site_settings['logo']) ? $site_settings['logo'] : '';
 $shop_phone = !empty($site_settings['phone']) ? $site_settings['phone'] : '0767557234';
 
@@ -90,7 +90,7 @@ if ($initial_theme === null) {
 
     <?php
     // Secure defaults and social metadata (security by design)
-    $meta_description = !empty($site_settings['meta_description']) ? $site_settings['meta_description'] : 'Buy elegant Abaya & Gowns at Grant Fashions. Quality fabrics, responsive service.';
+    $meta_description = !empty($site_settings['meta_description']) ? $site_settings['meta_description'] : 'Buy elegant Abaya & Gowns at Nazuri Collections. Quality fabrics, responsive service.';
     $meta_image = (!empty($shop_logo) && file_exists(__DIR__ . '/../uploads/' . $shop_logo)) ? ('uploads/' . htmlspecialchars($shop_logo)) : 'https://via.placeholder.com/1200x630?text=' . urlencode($shop_name);
     $site_url = !empty($site_settings['site_url']) ? $site_settings['site_url'] : ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? ''));
     ?>
@@ -137,6 +137,8 @@ if ($initial_theme === null) {
         /* Custom styles for mobile layout requirement */
         .dropdown-toggle.no-caret::after { display: none; }
         .navbar-brand { font-size: 1.1rem; }
+        .customer-action-icons .btn-link { color: inherit !important; }
+        [data-bs-theme="dark"] .customer-action-icons i { color: #f8f9fa; }
         @media (max-width: 991.98px) {
             .navbar-brand { text-align: center; margin-right: 0; }
             .customer-action-icons .bi { font-size: 1.25rem; }

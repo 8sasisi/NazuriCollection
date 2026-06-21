@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../includes/admin_auth.php';
 require_once __DIR__ . '/../config/db_connect.php';
+require_once __DIR__ . '/../config/encryption.php';
 
 // CSRF Token Generation
 if (empty($_SESSION['csrf_token'])) {
@@ -13,13 +14,19 @@ delete_item($conn, 'pre_orders', 'preorders.php');
 // Fetch Pre-Orders
 $stmt = $conn->query("SELECT * FROM pre_orders ORDER BY created_at DESC");
 $preorders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+foreach ($preorders as &$po) {
+    if (isset($po['customer_phone'])) {
+        $po['customer_phone'] = decrypt_data($po['customer_phone']);
+    }
+}
+unset($po);
 ?>
 <!DOCTYPE html>
 <html lang="sw">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pre-Orders | Grant Admin</title>
+    <title>Pre-Orders | Nazuri Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">

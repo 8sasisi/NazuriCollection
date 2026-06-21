@@ -148,7 +148,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
     <div class="row">
         <?php if($products): foreach($products as $product): ?>
-        <div class="col-6 col-md-4 col-lg-3 mb-4">
+        <div class="col-6 col-md-4 col-lg-3 col-xxl-2 mb-4">
             <div class="card h-100 border-0 shadow-sm product-card rounded-4 overflow-hidden">
                 <div class="img-wrapper position-relative">
                     <?php if(isset($product['offer_badge']) && $product['offer_badge'] == 1): ?>

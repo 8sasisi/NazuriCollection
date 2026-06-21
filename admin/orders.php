@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/../includes/admin_auth.php';
 require_once __DIR__ . '/../config/db_connect.php';
+require_once __DIR__ . '/../config/mailer.php';
+require_once __DIR__ . '/../config/encryption.php';
 
 // CSRF Token Generation
 if (empty($_SESSION['csrf_token'])) {
@@ -30,7 +32,7 @@ if (!empty($whereClauses)) {
 // Handle CSV Export
 if (isset($_GET['export']) && $_GET['export'] == 'csv') {
     header('Content-Type: text/csv; charset=utf-8');
-    header('Content-Disposition: attachment; filename=grant_fashions_orders.csv');
+    header('Content-Disposition: attachment; filename=nazuri_collections_orders.csv');
 
     $output = fopen('php://output', 'w');
     // Add CSV Header
@@ -41,6 +43,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
     $stmt->execute($params);
     
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        decrypt_order_pii($row);
         fputcsv($output, [
             '#' . $row['id'],
             $row['customer_name'],
@@ -68,6 +71,17 @@ if (isset($_POST['update_status'])) {
     
     $stmt = $conn->prepare("UPDATE orders SET order_status = ? WHERE id = ?");
     $stmt->execute([$new_status, $order_id]);
+    
+    // Send email notification to customer
+    $stmtOrder = $conn->prepare("SELECT id, customer_name, customer_email, customer_phone, total_amount FROM orders WHERE id = ? LIMIT 1");
+    $stmtOrder->execute([$order_id]);
+    $order = $stmtOrder->fetch(PDO::FETCH_ASSOC);
+    if ($order) {
+        decrypt_order_pii($order);
+        if (!empty($order['customer_email'])) {
+            sendOrderStatusUpdateCustomer($order, $new_status);
+        }
+    }
     
     header("Location: orders.php");
     exit();
@@ -109,6 +123,11 @@ $sql = "SELECT * FROM orders $whereSQL ORDER BY created_at DESC";
 $stmt = $conn->prepare($sql);
 $stmt->execute($params);
 $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Decrypt AES-256 encrypted PII fields
+foreach ($orders as &$order) {
+    decrypt_order_pii($order);
+}
+unset($order);
 
 // Fetch Order Items for each order to display in modal
 $order_items = [];
@@ -129,7 +148,7 @@ if (count($orders) > 0) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oda za Wateja | Grant Admin</title>
+    <title>Oda za Wateja | Nazuri Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -138,6 +157,10 @@ if (count($orders) > 0) {
         .sidebar { min-height: 100vh; background: #1a1d20; color: #fff; }
         .sidebar .nav-link { color: rgba(255,255,255,0.7); padding: 12px 20px; margin-bottom: 5px; border-radius: 8px; transition: all 0.3s; }
         .sidebar .nav-link:hover, .sidebar .nav-link.active { color: #fff; background: rgba(255,255,255,0.1); transform: translateX(5px); }
+        .compact-table { font-size: 0.8rem; }
+        .compact-table th { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #6c757d; }
+        .compact-table td { padding: 0.4rem 0.5rem; }
+        .compact-table .fw-bold { font-weight: 500 !important; }
         /* Dark Mode for Admin */
         [data-bs-theme="dark"] body { background-color: #212529; color: #f8f9fa; }
         [data-bs-theme="dark"] .bg-light { background-color: #2b3035 !important; }
@@ -185,7 +208,7 @@ if (count($orders) > 0) {
 
             <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
+                    <table class="table table-hover align-middle mb-0 compact-table">
                         <thead class="bg-light">
                             <tr>
                                 <th class="ps-4">ID</th>
@@ -234,7 +257,7 @@ if (count($orders) > 0) {
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="8" class="text-center py-4 text-muted">Hakuna oda
+                                    <td colspan="9" class="text-center py-4 text-muted">Hakuna oda
                                         zilizopatikana.</td>
                                 </tr>
                             <?php endif; ?>

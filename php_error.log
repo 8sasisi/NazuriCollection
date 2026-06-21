@@ -2,3 +2,21 @@
 [21-Jun-2026 11:58:18 UTC] Fatal Error: Cannot redeclare t() (previously declared in C:\wamp64\www\grant_folder-main\includes\functions.php:43)
 [21-Jun-2026 11:58:58 UTC] Fatal Error: Cannot redeclare t() (previously declared in C:\wamp64\www\grant_folder-main\includes\functions.php:43)
 [21-Jun-2026 12:03:50 UTC] Fatal Error: Cannot redeclare t() (previously declared in C:\wamp64\www\grant_folder-main\includes\functions.php:43)
+[21-Jun-2026 14:28:11 UTC] Mail error (customer): SMTP Error: Could not authenticate.
+[21-Jun-2026 14:28:15 UTC] Mail error (admin): SMTP Error: Could not authenticate.
+[21-Jun-2026 14:54:48 UTC] Mail error (password reset): SMTP Error: Could not authenticate.
+[21-Jun-2026 14:54:48 UTC] Failed to send password reset email to nazuri2023@gmail.com
+[21-Jun-2026 15:05:44 UTC] Mail error (password reset): SMTP Error: Could not authenticate.
+[21-Jun-2026 15:05:44 UTC] Failed to send password reset email to nazuri2023@gmail.com
+[21-Jun-2026 15:23:36 UTC] Mail error (password reset): SMTP Error: Could not authenticate.
+[21-Jun-2026 15:23:36 UTC] Failed to send password reset email to sammsasisi8@gmail.com
+[21-Jun-2026 15:33:15 UTC] Mail error (password reset): SMTP Error: Could not authenticate.
+[21-Jun-2026 15:33:15 UTC] Failed to send password reset email to sammsasisi8@gmail.com
+[21-Jun-2026 15:33:55 UTC] Mail error (password reset): SMTP Error: Could not authenticate.
+[21-Jun-2026 15:33:55 UTC] Failed to send password reset email to sammsasisi8@gmail.com
+[21-Jun-2026 16:03:39 UTC] Mail error (customer): SMTP Error: Could not authenticate.
+[21-Jun-2026 16:03:42 UTC] Mail error (admin): SMTP Error: Could not authenticate.
+[21-Jun-2026 16:14:28 UTC] Mail error (customer): SMTP Error: Could not authenticate.
+[21-Jun-2026 16:14:32 UTC] Mail error (admin): SMTP Error: Could not authenticate.
+[21-Jun-2026 16:17:49 UTC] Mail error (customer): SMTP Error: Could not authenticate.
+[21-Jun-2026 16:17:51 UTC] Mail error (admin): SMTP Error: Could not authenticate.

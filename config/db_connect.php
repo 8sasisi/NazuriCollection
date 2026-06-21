@@ -9,7 +9,7 @@ load_env_file($dotenv_path);
 $servername = env_value(/*'DB_HOST', 'sql301.infinityfree.com'*/'DB_HOST', 'localhost');
 $username = env_value(/*'DB_USERNAME', 'if0_41351924'*/'DB_USERNAME', 'root');
 $password = env_value(/*'DB_PASSWORD', 'rC9m64bxuJa'*/'DB_PASSWORD', '');
-$dbname = env_value(/*'DB_DATABASE', 'if0_41351924_grant_fashions_db'*/'DB_DATABASE', 'grant_fashions_db');
+$dbname = env_value(/*'DB_DATABASE', 'if0_41351924_nazuri_collections_db'*/'DB_DATABASE', 'nazuri_collections_db');
 $dbport = env_value('DB_PORT', '3306');
 
 try {

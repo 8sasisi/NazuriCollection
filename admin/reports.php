@@ -48,7 +48,7 @@ $top_products = $stmt_products->fetchAll(PDO::FETCH_ASSOC);
 
 $report_subject = "Ripoti ya Mauzo - " . $months[$selected_month] . " " . $selected_year;
 $report_summary_lines = [
-    "Grant Fashions - Ripoti ya Mauzo",
+    "Nazuri Collections - Ripoti ya Mauzo",
     "Kipindi: " . $months[$selected_month] . " " . $selected_year,
     "Jumla ya Mauzo: Tsh " . number_format($total_sales),
     "Idadi ya Oda: " . $total_orders,
@@ -74,7 +74,7 @@ $report_mailto_link = app_mailto_link($report_recipient_email, $report_subject, 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ripoti ya Mauzo | Grant Admin</title>
+    <title>Ripoti ya Mauzo | Nazuri Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -133,7 +133,7 @@ $report_mailto_link = app_mailto_link($report_recipient_email, $report_subject, 
             <!-- Report Content to Print -->
             <div id="report-content" class="p-3 bg-white rounded shadow-sm">
                 <div class="text-center mb-4 border-bottom pb-3">
-                    <h3 class="fw-bold text-uppercase">Grant Fashions</h3>
+                    <h3 class="fw-bold text-uppercase">Nazuri Collections</h3>
                     <h5 class="text-muted">Ripoti ya Mauzo - <?php echo $months[$selected_month] . ' ' . $selected_year; ?></h5>
                     <small>Imetolewa: <?php echo date('d M Y, H:i'); ?></small>
                 </div>

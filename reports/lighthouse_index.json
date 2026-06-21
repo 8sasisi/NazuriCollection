@@ -1564,7 +1564,7 @@
                 "height": 77
               },
               "snippet": "<h2 class=\"display-4 fw-bold mb-3\" style=\"font-family: 'Playfair Display', serif;\">",
-              "nodeLabel": "Shine with Grant Fashions"
+              "nodeLabel": "Shine with Nazuri Collections"
             },
             "score": 0.01383185673152456,
             "subItems": {
@@ -1657,7 +1657,7 @@
                 "height": 23
               },
               "snippet": "<span id=\"alttext\">",
-              "nodeLabel": "Welcome to Grant Fashions"
+              "nodeLabel": "Welcome to Nazuri Collections"
             },
             "score": 0.0001151582170555225,
             "subItems": {
@@ -2701,7 +2701,7 @@
                 "height": 24
               },
               "snippet": "<h5 class=\"text-uppercase\" style=\"font-family: 'Playfair Display', serif;\">",
-              "nodeLabel": "GRANT FASHIONS",
+              "nodeLabel": "Nazuri Collections",
               "explanation": "Fix any of the following:\n  Heading order invalid"
             }
           }
@@ -4096,7 +4096,7 @@
                     "height": 77
                   },
                   "snippet": "<h2 class=\"display-4 fw-bold mb-3\" style=\"font-family: 'Playfair Display', serif;\">",
-                  "nodeLabel": "Shine with Grant Fashions"
+                  "nodeLabel": "Shine with Nazuri Collections"
                 },
                 "score": 0.01383185673152456,
                 "subItems": {
@@ -4189,7 +4189,7 @@
                     "height": 23
                   },
                   "snippet": "<span id=\"alttext\">",
-                  "nodeLabel": "Welcome to Grant Fashions"
+                  "nodeLabel": "Welcome to Nazuri Collections"
                 },
                 "score": 0.0001151582170555225,
                 "subItems": {
@@ -4595,7 +4595,7 @@
               "height": 84
             },
             "snippet": "<h1 class=\"display-3 fw-bold mb-3\">",
-            "nodeLabel": "Welcome to Grant Fashions"
+            "nodeLabel": "Welcome to Nazuri Collections"
           }
         ]
       },

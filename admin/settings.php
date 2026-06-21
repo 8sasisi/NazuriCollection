@@ -97,7 +97,7 @@ function get_setting($key, $data) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mipangilio | Grant Admin</title>
+    <title>Mipangilio | Nazuri Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -145,7 +145,7 @@ function get_setting($key, $data) {
                         <div class="row mb-4">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Jina la Duka</label>
-                                <input type="text" name="shop_name" class="form-control" value="<?php echo get_setting('shop_name', $current_settings); ?>" placeholder="Grant Fashions">
+                                <input type="text" name="shop_name" class="form-control" value="<?php echo get_setting('shop_name', $current_settings); ?>" placeholder="Nazuri Collections">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Anwani / Mahali</label>
@@ -178,7 +178,7 @@ function get_setting($key, $data) {
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Barua Pepe (Email)</label>
-                                <input type="email" name="email" class="form-control" value="<?php echo get_setting('email', $current_settings); ?>" placeholder="Mfano: info@grantfashions.com">
+                                <input type="email" name="email" class="form-control" value="<?php echo get_setting('email', $current_settings); ?>" placeholder="Mfano: info@nazuricollections.com">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Instagram Link</label>

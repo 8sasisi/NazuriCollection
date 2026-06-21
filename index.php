@@ -100,7 +100,7 @@ $sliders = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <!-- Fallback ikiwa hakuna slider kwenye database -->
             <div class="carousel-item active hero-slide" style="background-color: #333;">
                  <div class="carousel-caption d-flex flex-column align-items-center justify-content-center top-0 bottom-0">
-                    <h1 class="display-3 fw-bold mb-3"><?php echo t('welcome_grant_fashions'); ?></h1>
+                    <h1 class="display-3 fw-bold mb-3"><?php echo t('welcome_nazuri_collections'); ?></h1>
                     <a href="shop.php" class="btn btn-primary btn-lg px-5 rounded-pill"><?php echo t('go_to_shop'); ?></a>
                 </div>
             </div>
@@ -158,7 +158,7 @@ $sliders = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if($products):
                 foreach($products as $product):
             ?>
-            <div class="col-md-6 col-lg-3 mb-4">
+            <div class="col-md-6 col-lg-3 col-xxl-2 mb-4">
                 <div class="card h-100 shadow-sm">
                     <!-- Responsive image with WebP generation -->
                     <?php require_once __DIR__ . '/includes/image_helper.php'; echo responsive_picture('uploads/' . $product['image'], $product['name'], ['class'=>'card-img-top','sizes'=>'(max-width: 768px) 100vw, 25vw']); ?>
@@ -223,7 +223,7 @@ $sliders = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
             <div class="row">
                 <?php foreach($pre_products as $product): ?>
-                <div class="col-md-6 col-lg-3 mb-4">
+                <div class="col-md-6 col-lg-3 col-xxl-2 mb-4">
                     <div class="card h-100 shadow-sm border-0">
                         <div class="position-relative">
                             <?php require_once __DIR__ . '/includes/image_helper.php'; echo responsive_picture('uploads/' . $product['image'], $product['name'], ['class'=>'card-img-top','sizes'=>'(max-width: 768px) 100vw, 25vw']); ?>

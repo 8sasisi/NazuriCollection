@@ -24,7 +24,7 @@ if (session_status() === PHP_SESSION_NONE) {
     $sessionScope = preg_replace('/[^a-z0-9]+/i', '_', $sessionHost . '_' . $sessionScriptBase);
     $sessionScope = trim((string)$sessionScope, '_');
     if ($sessionScope === '') {
-        $sessionScope = 'grant_fashions';
+        $sessionScope = 'nazuri_collections';
     }
     session_name('GFSESSID_' . substr($sessionScope, 0, 24));
 

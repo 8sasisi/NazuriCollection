@@ -126,33 +126,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         die("Security Error: Invalid CSRF Token.");
     }
 
-    $phone = trim($_POST['phone']);
+    $identifier = trim($_POST['identifier']);
     $password = $_POST['password'];
-    $normalizedPhone = normalize_admin_identifier($phone);
+    $isEmail = filter_var($identifier, FILTER_VALIDATE_EMAIL) !== false;
+    $normalizedPhone = $isEmail ? '' : normalize_admin_identifier($identifier);
 
-    if (empty($phone) || empty($password)) {
+    if (empty($identifier) || empty($password)) {
         $error_message = "Tafadhali jaza taarifa zako za kuingia.";
     } else {
-        // Kubali phone, username, au email ili login iwe rahisi zaidi.
-        $stmt = $conn->prepare(
-            "SELECT * FROM admins
-             WHERE phone = :phone_identifier
-                OR username = :username_identifier
-                OR email = :email_identifier
-             LIMIT 1"
-        );
-        $stmt->execute([
-            ':phone_identifier' => $phone,
-            ':username_identifier' => $phone,
-            ':email_identifier' => $phone,
-        ]);
-        $admin = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$admin && $normalizedPhone !== '' && $normalizedPhone !== $phone) {
-            $stmt = $conn->prepare("SELECT * FROM admins WHERE phone = :identifier LIMIT 1");
-            $stmt->execute([':identifier' => $normalizedPhone]);
-            $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+        // Login kwa kutumia email au namba ya simu pekee
+        if ($isEmail) {
+            $stmt = $conn->prepare("SELECT * FROM admins WHERE email = ? LIMIT 1");
+            $stmt->execute([$identifier]);
+        } else {
+            $stmt = $conn->prepare("SELECT * FROM admins WHERE phone = ? LIMIT 1");
+            $stmt->execute([$identifier]);
+            if ($stmt->rowCount() === 0 && $normalizedPhone !== '' && $normalizedPhone !== $identifier) {
+                $stmt = $conn->prepare("SELECT * FROM admins WHERE phone = ? LIMIT 1");
+                $stmt->execute([$normalizedPhone]);
+            }
         }
+        $admin = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($admin && password_verify($password, $admin['password'])) {
             // Nenosiri ni sahihi. Login moja kwa moja.
@@ -188,7 +182,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login | Grant Fashions</title>
+    <title>Admin Login | Nazuri Collections</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -213,7 +207,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php endif; ?>
             <form method="POST" action="login.php">
                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                <div class="mb-3"><label for="phone" class="form-label fw-bold">Namba ya Simu / Username / Email</label><input type="text" class="form-control form-control-lg" id="phone" name="phone" required placeholder="Mfano: 0712345678 au admin@example.com"></div>
+                <div class="mb-3"><label for="identifier" class="form-label fw-bold">Namba ya Simu / Barua Pepe</label><input type="text" class="form-control form-control-lg" id="identifier" name="identifier" required placeholder="Mfano: 0712345678 au admin@example.com"></div>
                 <div class="mb-4">
                     <label for="password" class="form-label fw-bold">Nenosiri</label>
                     <div class="input-group input-group-lg">

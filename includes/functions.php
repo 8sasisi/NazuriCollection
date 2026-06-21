@@ -225,6 +225,18 @@ if (!function_exists('validate_upload_file')) {
         }
     }
 
+    if (!function_exists('ensure_customer_email_column')) {
+        function ensure_customer_email_column(PDO $conn) {
+            try {
+                $stmt = $conn->query("SHOW COLUMNS FROM orders LIKE 'customer_email'");
+                if ($stmt && $stmt->rowCount() === 0) {
+                    $conn->exec("ALTER TABLE orders ADD COLUMN customer_email VARCHAR(150) DEFAULT NULL AFTER customer_name");
+                }
+            } catch (PDOException $e) {
+            }
+        }
+    }
+
     if (!function_exists('ensure_payer_phone_column')) {
         function ensure_payer_phone_column(PDO $conn) {
             try {

@@ -3,6 +3,7 @@ require_once __DIR__ . '/../config/session_bootstrap.php';
 require_once __DIR__ . '/../config/db_connect.php';
 require_once __DIR__ . '/../config/app_runtime.php';
 require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../config/mailer.php';
 start_admin_ui_translation_buffer();
 
 $message = "";
@@ -13,17 +14,37 @@ if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-// Create password_resets table if it doesn't exist
+// Rate limiting IP-based (max 3 requests per 15 minutes per IP + action)
+$ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+$action = 'password_reset_request';
+$rateLimitWindow = 900; // 15 minutes
+$maxRequests = 3;
+$currentTime = time();
+
+$stmtCleanup = $conn->prepare("DELETE FROM request_rate_limits WHERE request_time < ?");
+$stmtCleanup->execute([$currentTime - 3600]); // keep last hour
+
+$stmtRateCheck = $conn->prepare(
+    "SELECT COUNT(*) FROM request_rate_limits
+     WHERE ip_address = ? AND action_name = ? AND request_time > ?"
+);
+$stmtRateCheck->execute([$ip, $action, $currentTime - $rateLimitWindow]);
+$recentCount = (int)$stmtRateCheck->fetchColumn();
+
+// Create password_resets table if it doesn't exist (with hmac_token column)
 try {
-    $conn->query("SELECT 1 FROM password_resets LIMIT 1");
+    $conn->query("SELECT hmac_token FROM password_resets LIMIT 1");
 } catch (PDOException $e) {
+    // Recreate with hmac_token
+    $conn->exec("DROP TABLE IF EXISTS password_resets");
     $sql = "
     CREATE TABLE `password_resets` (
       `email` varchar(100) NOT NULL,
       `token` varchar(255) NOT NULL,
+      `hmac_token` varchar(64) NOT NULL,
       `expires_at` datetime NOT NULL,
       PRIMARY KEY (`email`),
-      KEY `token` (`token`)
+      KEY `hmac_token` (`hmac_token`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     ";
     $conn->exec($sql);
@@ -35,48 +56,65 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         die("Security Error: Invalid CSRF Token.");
     }
 
+    // Rate limit check
+    if ($recentCount >= $maxRequests) {
+        error_log("Rate limit hit for password reset: IP $ip");
+        die("Too many reset requests. Try again later.");
+    }
+
     $email = trim($_POST['email']);
 
     if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $message = "Tafadhali ingiza anwani sahihi ya barua pepe.";
         $msg_type = "danger";
     } else {
+        // Log this attempt for rate limiting
+        $stmtLog = $conn->prepare(
+            "INSERT INTO request_rate_limits (ip_address, action_name, request_time) VALUES (?, ?, ?)"
+        );
+        $stmtLog->execute([$ip, $action, $currentTime]);
+
         // 1. Check if email exists in admins table
-        $stmt = $conn->prepare("SELECT * FROM admins WHERE email = ?");
+        $stmt = $conn->prepare("SELECT id, username, email FROM admins WHERE email = ?");
         $stmt->execute([$email]);
         $admin = $stmt->fetch();
 
         if ($admin) {
-            // 2. Generate a secure token
+            // 2. Generate a secure token and its HMAC
             $token = bin2hex(random_bytes(32));
+            $hmacToken = hash_hmac('sha256', $token, getenv('APP_KEY'));
             
             // 3. Set expiry time (1 hour from now)
             $expires = new DateTime('now');
             $expires->add(new DateInterval('PT1H')); // 1 Hour
             $expires_at = $expires->format('Y-m-d H:i:s');
 
-            // 4. Store token in database (delete old one if exists)
+            // 4. Store HMAC in database (not raw token), delete old one if exists
             $stmt_delete = $conn->prepare("DELETE FROM password_resets WHERE email = ?");
             $stmt_delete->execute([$email]);
 
-            $stmt_insert = $conn->prepare("INSERT INTO password_resets (email, token, expires_at) VALUES (?, ?, ?)");
-            $stmt_insert->execute([$email, $token, $expires_at]);
+            $stmt_insert = $conn->prepare("INSERT INTO password_resets (email, token, hmac_token, expires_at) VALUES (?, ?, ?, ?)");
+            $stmt_insert->execute([$email, $token, $hmacToken, $expires_at]);
 
-            $reset_link = app_base_url() . "/admin/reset_password.php?token=" . $token;
+            $reset_link = app_base_url() . "/admin/reset_password.php?token=" . urlencode($token);
             
-            $subject = "Rejesha Nenosiri | Grant Admin";
-            $mail_body = "Habari,\n\nTumepokea ombi la kubadilisha nenosiri la akaunti yako. Tafadhali bonyeza link ifuatayo ili kuweka nenosiri jipya:\n\n" . $reset_link . "\n\nLink hii itafanya kazi kwa muda wa saa 1.\n\nAsante.";
-            $headers = "From: no-reply@" . ($_SERVER['HTTP_HOST'] ?? 'localhost');
-            
-            // Send email silently
-            @mail($email, $subject, $mail_body, $headers);
+            // 5. Send email via PHPMailer
+            $mailResult = sendAdminPasswordReset(
+                ['email' => $admin['email'], 'name' => $admin['username']],
+                $reset_link
+            );
 
-            app_log_event($conn, 'password_reset_requested', 'Password reset link sent to admin email.');
-            $message = "Ikiwa barua pepe yako ipo kwenye mfumo wetu, tumekutumia link ya kuweka upya nenosiri.";
+            if ($mailResult) {
+                app_log_event($conn, 'password_reset_requested', 'Password reset link sent to ' . $admin['email']);
+            } else {
+                error_log("Failed to send password reset email to {$admin['email']}");
+            }
+
+            $message = "Barua pepe ya kuweka upya nenosiri imetumwa.";
             $msg_type = "success";
 
         } else {
-            $message = "Ikiwa barua pepe yako ipo kwenye mfumo wetu, tumekutumia link ya kuweka upya nenosiri.";
+            $message = "Barua pepe ya kuweka upya nenosiri imetumwa.";
             $msg_type = "success";
         }
     }
@@ -87,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Umesahau Nenosiri | Grant Admin</title>
+    <title>Umesahau Nenosiri | Nazuri Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">

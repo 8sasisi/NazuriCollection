@@ -4,7 +4,7 @@ require_once __DIR__ . '/../config/db_connect.php';
 require_once __DIR__ . '/../includes/functions.php';
 start_admin_ui_translation_buffer();
 
-$token = $_GET['token'] ?? null;
+$raw_token = $_GET['token'] ?? ($_POST['raw_token'] ?? null);
 $message = "";
 $msg_type = "";
 $show_form = false;
@@ -14,13 +14,14 @@ if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-if (!$token) {
+if (!$raw_token) {
     $message = "Token haipo au si sahihi.";
     $msg_type = "danger";
 } else {
-    // 1. Validate token
-    $stmt = $conn->prepare("SELECT * FROM password_resets WHERE token = ?");
-    $stmt->execute([$token]);
+    // 1. Compute HMAC and look up by hashed token
+    $hmacToken = hash_hmac('sha256', $raw_token, getenv('APP_KEY'));
+    $stmt = $conn->prepare("SELECT * FROM password_resets WHERE hmac_token = ?");
+    $stmt->execute([$hmacToken]);
     $reset_request = $stmt->fetch();
 
     if (!$reset_request) {
@@ -77,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $show_form) {
             $stmt_delete = $conn->prepare("DELETE FROM password_resets WHERE email = ?");
             $stmt_delete->execute([$email]);
 
-            $message = "Nenosiri lako limebadilishwa kikamilifu! Sasa unaweza kuingia.";
+            $message = "Nenosiri Limebadilishwa";
             $msg_type = "success";
             $show_form = false; // Hide form after success
 
@@ -93,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $show_form) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weka Nenosiri Jipya | Grant Admin</title>
+    <title>Weka Nenosiri Jipya | Nazuri Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -105,18 +106,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $show_form) {
 <body>
     <div class="card login-card shadow-lg">
         <div class="card-body p-5">
-            <div class="text-center mb-4"><h2 class="fw-bold" style="font-family: 'Playfair Display', serif;">Weka Nenosiri Jipya</h2></div>
-            <?php if(!empty($message)): ?><div class="alert alert-<?php echo $msg_type; ?>" role="alert"><?php echo $message; ?></div><?php endif; ?>
-            <?php if ($show_form): ?>
-                <p class="text-muted text-center">Jaza nenosiri lako jipya hapa chini.</p>
-                <form method="POST" action="reset_password.php?token=<?php echo htmlspecialchars($token); ?>">
+            <?php if (!$show_form && $msg_type === 'success'): ?>
+                <div class="text-center mb-4">
+                    <div class="mb-3 text-success display-4"><i class="bi bi-check-circle-fill"></i></div>
+                    <h2 class="fw-bold" style="font-family: 'Playfair Display', serif;">Nenosiri Limebadilishwa</h2>
+                    <p class="text-muted mt-3 mb-4">Nenosiri lako limewekwa upya kikamilifu. Sasa unaweza kuingia kwenye akaunti yako.</p>
+                    <a href="login.php" class="btn btn-dark btn-lg rounded-pill px-5">Ingia Sasa</a>
+                </div>
+            <?php elseif ($show_form): ?>
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold" style="font-family: 'Playfair Display', serif;">Weka Nenosiri Jipya</h2>
+                    <p class="text-muted">Tafadhali weka nenosiri jipya kwa akaunti yako.</p>
+                </div>
+                <?php if(!empty($message)): ?><div class="alert alert-<?php echo $msg_type; ?>" role="alert"><?php echo $message; ?></div><?php endif; ?>
+                <form method="POST" action="reset_password.php?token=<?php echo htmlspecialchars($raw_token); ?>">
                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                    <div class="mb-3"><label for="password" class="form-label fw-bold">Nenosiri Jipya</label><input type="password" class="form-control form-control-lg" id="password" name="password" required></div>
-                    <div class="mb-4"><label for="password_confirm" class="form-label fw-bold">Thibitisha Nenosiri</label><input type="password" class="form-control form-control-lg" id="password_confirm" name="password_confirm" required></div>
-                    <div class="d-grid"><button type="submit" class="btn btn-dark btn-lg rounded-pill">Badilisha Nenosiri</button></div>
+                    <input type="hidden" name="raw_token" value="<?php echo htmlspecialchars($raw_token); ?>">
+                    <div class="mb-3">
+                        <label for="password" class="form-label fw-bold">Nenosiri Jipya</label>
+                        <input type="password" class="form-control form-control-lg" id="password" name="password" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="password_confirm" class="form-label fw-bold">Thibitisha Nenosiri Jipya</label>
+                        <input type="password" class="form-control form-control-lg" id="password_confirm" name="password_confirm" required>
+                    </div>
+                    <div class="d-grid"><button type="submit" class="btn btn-dark btn-lg rounded-pill">Weka Nenosiri Jipya</button></div>
                 </form>
             <?php else: ?>
-                <div class="text-center mt-3"><a href="login.php" class="btn btn-primary rounded-pill px-4">Nenda Kwenye Login</a></div>
+                <?php if(!empty($message)): ?><div class="alert alert-<?php echo $msg_type; ?>" role="alert"><?php echo $message; ?></div><?php endif; ?>
+                <div class="text-center mt-3"><a href="login.php" class="btn btn-dark rounded-pill px-4">Ingia Sasa</a></div>
             <?php endif; ?>
         </div>
     </div>

@@ -155,9 +155,9 @@ if ($id !== false && $id !== null && $id > 0) {
     <?php unset($_SESSION['review_bad_word_error']); ?>
     <?php endif; ?>
 
-    <div class="row mt-4">
+    <div class="row mt-4 g-5">
         <!-- Sehemu ya Picha -->
-        <div class="col-md-6 mb-4">
+        <div class="col-md-6 col-xxl-7 mb-4">
             <style>
                 .zoom-container { overflow: hidden; cursor: crosshair; }
                 .zoom-container img { transition: transform 0.3s ease-out; }
@@ -182,7 +182,7 @@ if ($id !== false && $id !== null && $id > 0) {
         </div>
 
         <!-- Sehemu ya Maelezo na Chaguzi -->
-        <div class="col-md-6">
+        <div class="col-md-6 col-xxl-5">
             <h1 class="display-5 fw-bold" style="font-family: 'Playfair Display', serif;">
                 <?php echo htmlspecialchars($product['name']); ?>
                 <?php if(isset($product['offer_badge']) && $product['offer_badge'] == 1): ?>
@@ -200,14 +200,6 @@ if ($id !== false && $id !== null && $id > 0) {
                 <?php endif; ?>
             </div>
              
-            <!-- Star Rating Display -->
-            <div class="mb-3 text-warning">
-                <?php for($i=1; $i<=5; $i++): ?>
-                    <i class="bi <?php echo ($i <= $avg_rating) ? 'bi-star-fill' : (($i - 0.5 <= $avg_rating) ? 'bi-star-half' : 'bi-star'); ?>"></i>
-                <?php endfor; ?>
-                <span class="text-muted small ms-2">(<?php echo $review_count; ?> reviews)</span>
-            </div>
-
             <?php if($product['discount_price'] > 0): ?>
                 <?php 
                     $percentage = ($product['price'] > 0) ? (($product['price'] - $product['discount_price']) / $product['price']) * 100 : 0;
@@ -329,14 +321,14 @@ if ($id !== false && $id !== null && $id > 0) {
     </div>
 
     <!-- Reviews Section -->
-    <div class="row mt-5">
+    <div class="row mt-5 justify-content-center">
         <div class="col-12">
             <h3 class="fw-bold border-bottom pb-3 mb-4"><?php echo t('customer_reviews'); ?></h3>
         </div>
-        <div class="col-md-6">
+        <div class="col-12 mb-4">
             <?php if($review_count > 0): ?>
                 <?php foreach($reviews as $review): ?>
-                <div class="card border-0 shadow-sm mb-3">
+                <div class="card border-0 shadow-sm mb-3 review-card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <h6 class="fw-bold"><?php echo htmlspecialchars($review['customer_name'], ENT_QUOTES, 'UTF-8'); ?></h6>
@@ -355,8 +347,8 @@ if ($id !== false && $id !== null && $id > 0) {
                 <p class="text-muted"><?php echo t('no_reviews_yet'); ?></p>
             <?php endif; ?>
         </div>
-        <div class="col-md-6">
-            <div class="card bg-light border-0 rounded-4 p-4">
+        <div class="col-12">
+            <div class="card border-0 rounded-4 p-4 review-form-card">
                 <h5 class="fw-bold mb-3"><?php echo t('write_your_review'); ?></h5>
                 <form method="POST">
                     <input type="hidden" name="token" value="<?php echo htmlspecialchars($_SESSION['token'], ENT_QUOTES, 'UTF-8'); ?>">
@@ -379,6 +371,11 @@ if ($id !== false && $id !== null && $id > 0) {
                             <option value="2">2 - <?php echo t('poor'); ?></option>
                             <option value="1">1 - <?php echo t('very_poor'); ?></option>
                         </select>
+                        <div class="text-center text-warning mt-2" id="ratingStars">
+                            <?php for($i=1; $i<=5; $i++): ?>
+                                <i class="bi <?php echo ($i <= $avg_rating) ? 'bi-star-fill' : (($i - 0.5 <= $avg_rating) ? 'bi-star-half' : 'bi-star'); ?> fs-4" data-star="<?php echo $i; ?>"></i>
+                            <?php endfor; ?>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label d-flex justify-content-between">
@@ -431,6 +428,22 @@ document.addEventListener('DOMContentLoaded', function() {
             charCount.textContent = this.value.length;
         });
     }
+
+    const ratingSelect = document.querySelector('select[name="rating"]');
+    const ratingStars = document.getElementById('ratingStars');
+    if (ratingSelect && ratingStars) {
+        const updateStars = function(val) {
+            val = parseInt(val);
+            ratingStars.querySelectorAll('i').forEach(function(star) {
+                var idx = parseInt(star.dataset.star);
+                star.className = 'bi ' + (idx <= val ? 'bi-star-fill' : 'bi-star') + ' fs-4';
+            });
+        };
+        ratingSelect.addEventListener('change', function() {
+            updateStars(this.value);
+        });
+        updateStars(ratingSelect.value);
+    }
 });
 
 <?php if($show_timer): ?>
@@ -480,4 +493,14 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
+<style>
+    .review-card { background-color: #fff; }
+    .review-form-card { background-color: #fff; }
+    [data-bs-theme="dark"] .review-card,
+    [data-bs-theme="dark"] .review-form-card { background-color: #2b3035; }
+    [data-bs-theme="dark"] .review-form-card input,
+    [data-bs-theme="dark"] .review-form-card select,
+    [data-bs-theme="dark"] .review-form-card textarea { background-color: #1d1f23; color: #f8f9fa; border-color: #444; }
+    [data-bs-theme="dark"] .border-bottom { border-color: #444 !important; }
+</style>
 <?php include 'includes/footer.php'; ?>

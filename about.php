@@ -15,9 +15,9 @@ if (!function_exists('t')) {
 
 <div class="container py-5">
     <!-- Intro Section -->
-    <div class="row align-items-center mb-5">
-        <div class="col-lg-6">
-            <h1 class="display-4 fw-bold mb-4" style="font-family: 'Playfair Display', serif;"><?php echo t('about'); ?> Grant Fashions</h1>
+    <div class="row align-items-center mb-5 g-5">
+        <div class="col-lg-6 col-xl-5">
+            <h1 class="display-4 fw-bold mb-4" style="font-family: 'Playfair Display', serif;"><?php echo t('about'); ?> Nazuri Collections</h1>
             <p class="lead text-body-secondary mb-4">
                 <?php echo t('about_us_intro'); ?>
             </p>
@@ -26,9 +26,8 @@ if (!function_exists('t')) {
             </p>
             <a href="shop.php" class="btn btn-primary mt-3"><?php echo t('all_products'); ?></a>
         </div>
-        <div class="col-lg-6 mt-4 mt-lg-0">
-            <!-- Placeholder image - Badilisha na picha halisi ya duka au bidhaa -->
-            <img src="uploads/IMG-20251202-WA0053.jpg" alt="Duka la Grant Fashions" class="img-fluid rounded shadow-sm" loading="lazy">
+        <div class="col-lg-6 col-xl-7 mt-4 mt-lg-0">
+            <img src="uploads/IMG-20251202-WA0053.jpg" alt="Duka la Nazuri Collections" class="img-fluid rounded shadow-sm w-100" loading="lazy" style="max-height: 500px; object-fit: cover;">
         </div>
     </div>
 
@@ -36,9 +35,9 @@ if (!function_exists('t')) {
     <div class="row mt-5">
         <div class="col-12">
             <div class="bg-body-tertiary p-5 rounded-4 shadow-sm border">
-                <div class="row text-center text-md-start">
+                <div class="row text-center text-md-start g-4">
                     <!-- Location -->
-                    <div class="col-md-6 mb-4 mb-md-0 border-md-end">
+                    <div class="col-md-6 col-xl-4 mb-4 mb-md-0">
                         <h3 class="fw-bold mb-3"><i class="bi bi-geo-alt-fill text-danger"></i> <?php echo t('location'); ?></h3>
                         <h5 class="fw-bold text-body">Dar es Salaam, Kariakoo</h5>
                         <p class="mb-0 fs-5 text-body"><?php echo t('office_street'); ?></p>
@@ -46,7 +45,7 @@ if (!function_exists('t')) {
                     </div>
                     
                     <!-- Social Media -->
-                    <div class="col-md-6 ps-md-5">
+                    <div class="col-md-6 col-xl-4 mb-4 mb-md-0">
                         <h3 class="fw-bold mb-3"><i class="bi bi-share-fill text-primary"></i> <?php echo t('social_media'); ?></h3>
                         <p class="mb-3 text-body-secondary"><?php echo t('follow_for_updates'); ?></p>
                         <div class="d-flex gap-3 justify-content-center justify-content-md-start">
@@ -55,6 +54,15 @@ if (!function_exists('t')) {
                             <a href="#" class="btn btn-danger rounded-circle p-3" style="background: #E1306C; border: none;"><i class="bi bi-instagram fs-5"></i></a>
                             <a href="#" class="btn btn-dark rounded-circle p-3"><i class="bi bi-twitter-x fs-5"></i></a>
                         </div>
+                    </div>
+
+                    <!-- Business Hours -->
+                    <div class="col-md-6 col-xl-4">
+                        <h3 class="fw-bold mb-3"><i class="bi bi-clock-fill text-primary"></i> Business Hours</h3>
+                        <ul class="list-unstyled text-body-secondary">
+                            <li class="mb-2">Mon - Sat: 8:00 AM - 7:00 PM</li>
+                            <li class="mb-2">Sunday: 10:00 AM - 4:00 PM</li>
+                        </ul>
                     </div>
                 </div>
             </div>

@@ -606,3 +606,199 @@ footer a:hover {
     outline: 2px solid var(--primary-color);
     outline-offset: 2px;
 }
+
+/* ============================================
+   LARGE-SCREEN ENHANCEMENTS (1400px and up)
+   ============================================ */
+
+/* Wider containers on large screens */
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1600px;
+    }
+}
+
+@media (min-width: 1800px) {
+    .container {
+        max-width: 1800px;
+    }
+}
+
+/* Scale typography on large screens */
+@media (min-width: 1600px) {
+    body {
+        font-size: 1.05rem;
+    }
+
+    h1, .h1 { font-size: calc(1.625rem + 1.8vw); }
+    h2, .h2 { font-size: calc(1.425rem + 1.2vw); }
+    h3, .h3 { font-size: calc(1.3rem + 0.8vw); }
+
+    .display-3 { font-size: calc(2.5rem + 3vw); }
+    .display-4 { font-size: calc(2rem + 2.5vw); }
+    .display-5 { font-size: calc(1.75rem + 2vw); }
+
+    .lead { font-size: 1.2rem; }
+
+    /* Increase section spacing */
+    section.py-5 { padding-top: 4rem !important; padding-bottom: 4rem !important; }
+    .py-5 { padding-top: 4rem !important; padding-bottom: 4rem !important; }
+    .my-5 { margin-top: 4rem !important; margin-bottom: 4rem !important; }
+    .gap-4 { gap: 2rem !important; }
+}
+
+/* Product card improvements on large screens */
+@media (min-width: 1400px) {
+    .product-card img,
+    .card-img-top {
+        height: 380px !important;
+    }
+
+    .card-body {
+        padding: 1.75rem;
+    }
+
+    .card-title.fs-6 {
+        font-size: 1.05rem !important;
+    }
+
+    /* Product details page: bigger image on large screens */
+    .zoom-container img {
+        min-height: 500px;
+        object-fit: cover;
+    }
+
+    /* Reviews: side columns balance */
+    .reviews-list .card {
+        margin-bottom: 1.25rem;
+    }
+}
+
+/* Zoom container on large screens */
+@media (min-width: 1600px) {
+    .zoom-container img {
+        min-height: 600px;
+    }
+}
+
+/* Hero section enhancements on large screens */
+@media (min-width: 1600px) {
+    .hero-slide {
+        height: 85vh;
+    }
+
+    .carousel-caption h1 {
+        max-width: 1000px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .carousel-caption p.lead {
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+/* Larger promo banner on big screens */
+@media (min-width: 1400px) {
+    section.container-fluid.px-0.my-5 [style*="height: 400px"] {
+        height: 500px !important;
+    }
+}
+
+/* Cart page: larger table and summary card */
+@media (min-width: 1400px) {
+    .table td, .table th {
+        padding: 1.25rem 1.5rem;
+    }
+
+    .sticky-summary {
+        top: 100px;
+    }
+
+    .sticky-summary .card-body {
+        padding: 2rem !important;
+    }
+}
+
+/* Pre-order section category heading */
+@media (min-width: 1400px) {
+    .preorder-category-heading {
+        font-size: 1.75rem;
+    }
+}
+
+/* Navbar: more spacing on large screens */
+@media (min-width: 1400px) {
+    .navbar {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+
+    .navbar .container {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+    .nav-link {
+        font-size: 1rem;
+        padding: 0.75rem 1.25rem !important;
+    }
+
+    .customer-action-icons .bi {
+        font-size: 1.35rem;
+    }
+}
+
+/* Footer improvements on large screens */
+@media (min-width: 1400px) {
+    footer.py-5 {
+        padding-top: 5rem !important;
+        padding-bottom: 5rem !important;
+    }
+
+    footer .row {
+        max-width: 1400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    footer h5 {
+        font-size: 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+
+    footer .list-unstyled li {
+        margin-bottom: 0.6rem;
+    }
+}
+
+/* Pagination on large screens */
+@media (min-width: 1400px) {
+    .pagination {
+        gap: 0.5rem;
+    }
+
+    .page-link {
+        padding: 0.6rem 1rem;
+        font-size: 1rem;
+    }
+}
+
+/* Buttons on large screens */
+@media (min-width: 1400px) {
+    .btn-lg {
+        padding: 0.75rem 2rem;
+        font-size: 1.05rem;
+    }
+
+    .btn-sm {
+        padding: 0.4rem 1rem;
+    }
+}
+
+/* Smooth scrolling for the whole page */
+html {
+    scroll-behavior: smooth;
+}

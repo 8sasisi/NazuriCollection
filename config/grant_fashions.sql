@@ -45,12 +45,14 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `public_id` varchar(32) DEFAULT NULL,
   `customer_name` varchar(100) NOT NULL,
+  `customer_email` varchar(150) DEFAULT NULL,
   `customer_phone` varchar(20) NOT NULL,
+  `payer_phone` varchar(20) DEFAULT NULL,
   `total_amount` decimal(10,2) NOT NULL,
   `payment_method` varchar(50) NOT NULL,
   `order_status` varchar(50) DEFAULT 'pending',
-`created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-   PRIMARY KEY (`id`),
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
   UNIQUE KEY `public_id` (`public_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

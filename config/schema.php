@@ -48,6 +48,7 @@ return [
             'id' => 'int(11) NOT NULL AUTO_INCREMENT',
             'public_id' => 'varchar(32) DEFAULT NULL',
             'customer_name' => 'varchar(100) NOT NULL',
+            'customer_email' => 'varchar(150) DEFAULT NULL',
             'customer_phone' => 'varchar(20) NOT NULL',
             'total_amount' => 'decimal(10,2) NOT NULL',
             'payment_method' => 'varchar(50) NOT NULL',

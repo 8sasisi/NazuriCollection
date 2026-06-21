@@ -2,6 +2,8 @@
 require_once 'config/session_bootstrap.php';
 require_once 'config/db_connect.php';
 require_once 'config/app_runtime.php';
+require_once 'config/mailer.php';
+require_once 'config/encryption.php';
 require_once 'includes/functions.php';
 
 if (empty($_SESSION['token'])) {
@@ -122,6 +124,7 @@ if (isset($_POST['apply_coupon'])) {
 if (isset($_POST['place_order'])) {
     // Sanitization (Kusafisha data - Kuzuia Malicious Code)
     $name = trim(strip_tags($_POST['customer_name'] ?? ''));
+    $email = filter_var(trim($_POST['customer_email'] ?? ''), FILTER_VALIDATE_EMAIL);
     $phone_raw = trim(strip_tags($_POST['customer_phone'] ?? ''));
     $payer_raw = trim(strip_tags($_POST['payer_phone'] ?? ''));
 
@@ -137,7 +140,7 @@ if (isset($_POST['place_order'])) {
     $payment_method = trim(strip_tags($_POST['payment_method'] ?? 'cash_on_delivery'));
 
     // Validation (Uhakiki - Kuhakikisha data imejazwa na ni sahihi)
-    if (empty($name) || empty($phone) || empty($payer_phone)) {
+    if (empty($name) || !$email || empty($phone) || empty($payer_phone)) {
         echo "<script>alert('" . addslashes(t('fill_all_checkout_fields')) . "'); window.history.back();</script>";
         exit();
     }
@@ -168,17 +171,18 @@ if (isset($_POST['place_order'])) {
 
     if ($total_amount > 0) {
         try {
-            // Ensure orders table has payer_phone column (best-effort)
+            // Ensure orders table has payer_phone and customer_email columns (best-effort)
             ensure_payer_phone_column($conn);
+            ensure_customer_email_column($conn);
 
             $conn->beginTransaction();
 
             // Generate a unique public ID for the order receipt
             $public_id = bin2hex(random_bytes(16));
 
-            // Ingiza kwenye orders (including payer_phone)
-            $stmt = $conn->prepare("INSERT INTO orders (public_id, customer_name, customer_phone, payer_phone, total_amount, payment_method, order_status) VALUES (?, ?, ?, ?, ?, ?, 'pending')");
-            $stmt->execute([$public_id, $name, $phone, $payer_phone, $total_amount, $payment_method]);
+            // Ingiza kwenye orders (including payer_phone, customer_email) — PII encrypted with AES-256
+            $stmt = $conn->prepare("INSERT INTO orders (public_id, customer_name, customer_email, customer_phone, payer_phone, total_amount, payment_method, order_status) VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')");
+            $stmt->execute([$public_id, $name, encrypt_data($email), encrypt_data($phone), $payer_phone, $total_amount, $payment_method]);
             $order_id = $conn->lastInsertId();
 
             // Ingiza kwenye order_items
@@ -217,7 +221,7 @@ if (isset($_POST['place_order'])) {
                     if ($p_status == 'preorder') {
                         $stmt_preorder->execute([
                             $name,
-                            $phone,
+                            encrypt_data($phone),
                             $item['name'],
                             $item['quantity'],
                             $item['size'],
@@ -234,6 +238,25 @@ if (isset($_POST['place_order'])) {
                 'order_created',
                 'Order #' . $order_id . ' created by ' . $name . ' via ' . $payment_method . ' total Tsh ' . number_format($total_amount, 2, '.', '') . ' payer: ' . $payer_phone
             );
+
+            // Send order confirmation emails (best-effort)
+            $stmtItems = $conn->prepare("SELECT oi.product_name, oi.quantity, oi.price, oi.size, oi.color, p.product_code FROM order_items oi LEFT JOIN products p ON oi.product_id = p.id WHERE oi.order_id = ?");
+            $stmtItems->execute([$order_id]);
+            $orderItems = $stmtItems->fetchAll(PDO::FETCH_ASSOC);
+            $orderData = [
+                'id' => $order_id,
+                'customer_name' => $name,
+                'customer_email' => $email,
+                'customer_phone' => $phone,
+                'total_amount' => number_format($total_amount, 2, '.', ''),
+                'items' => $orderItems,
+            ];
+            sendOrderReceivedCustomer($orderData);
+            $adminEmails = getAdminEmails();
+            foreach ($adminEmails as $adminEmail) {
+                sendNewOrderAdmin($orderData, $adminEmail);
+            }
+
             $_SESSION['order_notice'] = 'Oda yako imepokelewa. Admin ataiona moja kwa moja kwenye dashboard.';
 
             // Futa kapu
@@ -443,16 +466,7 @@ include 'includes/header.php';
                             $wa_link = "https://wa.me/255767557234?text=" . urlencode(trim($wa_message));
                         ?>
 
-                        <!-- Payment Selection (hidden / simplified per request) -->
-                                                <div class="mb-4">
-                                                    <h6 class="fw-bold mb-2 small text-uppercase"><?php echo t('choose_payment_method'); ?></h6>
-                                                    <div class="p-0">
-                                                        <p class="small text-muted mb-2 fw-bold"><?php echo t('paid_on_delivery'); ?></p>
-                                                        <p class="small text-muted"><?php echo t('payment_will_be_collected_on_delivery'); ?></p>
-                                                        <!-- Keep a hidden input so the modal receives the payment method value -->
-                                                        <input type="hidden" name="payment_method" value="cash_on_delivery">
-                                                    </div>
-                                                </div>
+                        <input type="hidden" name="payment_method" value="cash_on_delivery">
 
 <div class="d-grid gap-2">
                              <a href="<?php echo htmlspecialchars($wa_link, ENT_QUOTES, 'UTF-8'); ?>" id="wa-checkout-btn" target="_blank" rel="noopener noreferrer" class="btn btn-success py-3 rounded-pill text-uppercase tracking-wide fw-bold shadow-sm">

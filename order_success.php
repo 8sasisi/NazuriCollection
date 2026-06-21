@@ -1,5 +1,6 @@
 <?php
 require_once 'config/db_connect.php';
+require_once 'config/encryption.php';
 include 'includes/header.php';
 
 if (!isset($_GET['id']) || !preg_match('/^[a-f0-9]{32}$/', $_GET['id'])) {
@@ -26,6 +27,9 @@ if (!$is_admin && $session_order_id != $public_order_id) {
 $stmt = $conn->prepare("SELECT * FROM orders WHERE public_id = ?");
 $stmt->execute([$public_order_id]);
 $order = $stmt->fetch(PDO::FETCH_ASSOC);
+if ($order) {
+    decrypt_order_pii($order);
+}
 
 if (!$order) {
     echo "<div class='container py-5'><div class='alert alert-danger'>Samahani, oda hii haikupatikana.</div></div>";
@@ -41,13 +45,13 @@ $items = $stmt_items->fetchAll(PDO::FETCH_ASSOC);
 
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
+        <div class="col-lg-8 col-xxl-7">
             <?php if (!empty($_SESSION['order_notice'])): ?>
                 <div class="alert alert-info"><?php echo htmlspecialchars((string)$_SESSION['order_notice']); unset($_SESSION['order_notice']); ?></div>
             <?php endif; ?>
             <div class="text-center mb-5">
                 <div class="mb-3 text-success">
-                    <i class="bi bi-check-circle-fill display-1"></i>
+                    <i class="bi bi-check-circle-fill display-1 animated-checkmark"></i>
                 </div>
                 <h1 class="fw-bold" style="font-family: 'Playfair Display', serif;"><?php echo t('thank_you_for_your_order'); ?></h1>
                 <p class="lead text-muted"><?php echo t('order_received_message'); ?></p>
@@ -58,7 +62,7 @@ $items = $stmt_items->fetchAll(PDO::FETCH_ASSOC);
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                              
-                            <h5 class="mb-0 fw-bold">GRANT FASHIONS</h5>
+                            <h5 class="mb-0 fw-bold">NAZURI COLLECTIONS</h5>
                             <small><?php echo t('order_receipt'); ?></small>
                         </div>                        <div class="text-end">
                             <h5 class="mb-0">#<?php echo str_pad($order['id'], 6, '0', STR_PAD_LEFT); ?></h5>
@@ -73,20 +77,17 @@ $items = $stmt_items->fetchAll(PDO::FETCH_ASSOC);
                             <h6 class="fw-bold text-uppercase small text-muted"><?php echo t('customer_details'); ?></h6>
                             <p class="mb-0 fw-bold"><?php echo htmlspecialchars($order['customer_name']); ?></p>
                             <p class="mb-0"><?php echo htmlspecialchars($order['customer_phone']); ?></p>
-                            <p class="mb-0"><strong><?php echo t('payer_phone_label'); ?>:</strong> <?php echo htmlspecialchars($order['payer_phone'] ?? ''); ?></p>
                         </div>
                         <div class="col-sm-6 text-sm-end">
-                            <h6 class="fw-bold text-uppercase small text-muted"><?php echo t('payment_method'); ?></h6>
-                            <span class="badge bg-light text-dark border"><?php echo htmlspecialchars($order['payment_method']); ?></span>
                             <p class="mt-2 mb-0 small text-muted"><?php echo t('status_label'); ?>: <span class="fw-bold text-uppercase"><?php echo htmlspecialchars($order['order_status']); ?></span></p>
                         </div>
                     </div>
 
                     <!-- Order Items -->
                     <div class="table-responsive">
-                        <table class="table table-borderless mb-0">
+                        <table class="table table-borderless mb-0 compact-receipt-table">
                             <thead class="border-bottom">
-                                <tr class="small text-uppercase text-muted">
+                                <tr class="text-uppercase text-muted" style="font-size:0.7rem;letter-spacing:0.5px;">
                                     <th><?php echo t('product'); ?></th>
                                     <th class="text-center"><?php echo t('quantity_label'); ?></th>
                                     <th class="text-end"><?php echo t('price_label'); ?></th>
@@ -97,19 +98,19 @@ $items = $stmt_items->fetchAll(PDO::FETCH_ASSOC);
                                 <?php foreach($items as $item): ?>
                                 <tr>
                                     <td>
-                                        <span class="fw-bold d-block"><?php echo htmlspecialchars($item['product_name']); ?></span>
-                                        <small class="text-muted"><?php echo t('size_label'); ?>: <?php echo $item['size']; ?>, <?php echo t('color_label'); ?>: <?php echo $item['color']; ?></small>
+                                        <span class="d-block fw-medium" style="font-size:0.8rem;"><?php echo htmlspecialchars($item['product_name']); ?></span>
+                                        <span class="text-muted" style="font-size:0.7rem;"><?php echo t('size_label'); ?>: <?php echo $item['size']; ?>, <?php echo t('color_label'); ?>: <?php echo $item['color']; ?></span>
                                     </td>
-                                    <td class="text-center"><?php echo $item['quantity']; ?></td>
-                                    <td class="text-end">Tsh <?php echo number_format($item['price']); ?></td>
-                                    <td class="text-end">Tsh <?php echo number_format($item['price'] * $item['quantity']); ?></td>
+                                    <td class="text-center" style="font-size:0.8rem;"><?php echo $item['quantity']; ?></td>
+                                    <td class="text-end" style="font-size:0.8rem;">Tsh <?php echo number_format($item['price']); ?></td>
+                                    <td class="text-end" style="font-size:0.8rem;">Tsh <?php echo number_format($item['price'] * $item['quantity']); ?></td>
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>
                             <tfoot class="border-top">
                                 <tr>
-                                    <td colspan="3" class="text-end fw-bold pt-3"><?php echo t('grand_total'); ?></td>
-                                    <td class="text-end fw-bold pt-3 fs-5 text-primary">Tsh <?php echo number_format($order['total_amount']); ?></td>
+                                    <td colspan="3" class="text-end fw-bold pt-2" style="font-size:0.8rem;"><?php echo t('grand_total'); ?></td>
+                                    <td class="text-end fw-bold pt-2 text-primary" style="font-size:1rem;">Tsh <?php echo number_format($order['total_amount']); ?></td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -133,6 +134,19 @@ $items = $stmt_items->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <style>
+.animated-checkmark {
+    animation: checkPop 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+    opacity: 0;
+    transform: scale(0);
+}
+@keyframes checkPop {
+    0% { opacity: 0; transform: scale(0); }
+    60% { opacity: 1; transform: scale(1.15); }
+    100% { opacity: 1; transform: scale(1); }
+}
+.compact-receipt-table td, .compact-receipt-table th {
+    padding: 0.35rem 0.25rem;
+}
 @media print {
     .no-print, header, footer, nav {
         display: none !important;
