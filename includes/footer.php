@@ -13,7 +13,7 @@
                 </ul>
             </div>
             <div class="col-md-6 col-lg-4 col-xl-3 mb-3">
-                <h5 class="mb-3">Quick Links</h5>
+                <h5 class="mb-3"><?php echo t('quick_links_title'); ?></h5>
                 <ul class="list-unstyled small">
                     <li class="mb-2"><a href="shop.php" class="text-white-50 text-decoration-none"><?php echo t('shop'); ?></a></li>
                     <li class="mb-2"><a href="about.php" class="text-white-50 text-decoration-none"><?php echo t('about'); ?></a></li>
@@ -21,11 +21,11 @@
                 </ul>
             </div>
             <div class="col-md-6 col-lg-4 col-xl-3 mb-3">
-                <h5 class="mb-3">Follow Us</h5>
+                <h5 class="mb-3"><?php echo t('follow_us'); ?></h5>
                 <div class="d-flex gap-3">
-                    <a href="#" class="text-white-50 fs-5" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>
-                    <a href="#" class="text-white-50 fs-5" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
-                    <a href="#" class="text-white-50 fs-5" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                    <a href="<?php echo htmlspecialchars($site_settings['whatsapp'] ?? '#'); ?>" class="text-white-50 fs-5" aria-label="WhatsApp" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i></a>
+                    <a href="<?php echo htmlspecialchars($site_settings['instagram'] ?? '#'); ?>" class="text-white-50 fs-5" aria-label="Instagram" target="_blank" rel="noopener"><i class="bi bi-instagram"></i></a>
+                    <a href="<?php echo htmlspecialchars($site_settings['facebook'] ?? '#'); ?>" class="text-white-50 fs-5" aria-label="Facebook" target="_blank" rel="noopener"><i class="bi bi-facebook"></i></a>
                 </div>
             </div>
         </div>

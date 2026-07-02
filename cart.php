@@ -6,6 +6,16 @@ require_once 'config/mailer.php';
 require_once 'config/encryption.php';
 require_once 'includes/functions.php';
 
+// Fetch site settings for cart processing
+$cart_settings_stmt = $conn->query("SELECT * FROM site_settings");
+$cart_settings_rows = $cart_settings_stmt->fetchAll(PDO::FETCH_ASSOC);
+$cart_site_settings = [];
+foreach ($cart_settings_rows as $row) {
+    $cart_site_settings[$row['setting_key']] = $row['setting_value'];
+}
+$cart_max_qty = !empty($cart_site_settings['max_order_qty']) ? (int)$cart_site_settings['max_order_qty'] : 3;
+$cart_currency = 'Tsh';
+
 if (empty($_SESSION['token'])) {
     $_SESSION['token'] = bin2hex(random_bytes(32));
 }
@@ -39,8 +49,8 @@ if (isset($_POST['add_to_cart'])) {
 
     if ($quantity < 1) {
         $quantity = 1;
-    } elseif ($quantity > 2) {
-        $quantity = 2;
+    } elseif ($quantity > $cart_max_qty) {
+        $quantity = $cart_max_qty;
     }
 
     // Chukua taarifa halisi za bidhaa kutoka database (usiamini POST price/name)
@@ -257,7 +267,7 @@ if (isset($_POST['place_order'])) {
                 sendNewOrderAdmin($orderData, $adminEmail);
             }
 
-            $_SESSION['order_notice'] = 'Oda yako imepokelewa. Admin ataiona moja kwa moja kwenye dashboard.';
+            $_SESSION['order_notice'] = t('order_received_notice');
 
             // Futa kapu
             $_SESSION['last_order_id'] = $public_id;
@@ -434,6 +444,11 @@ include 'includes/header.php';
                         
                         <!-- WhatsApp Checkout Link Construction -->
                         <?php
+                            $wa_raw_phone = !empty($cart_site_settings['phone']) ? $cart_site_settings['phone'] : '0767557234';
+                            $wa_clean = preg_replace('/[^0-9]/', '', $wa_raw_phone);
+                            if (substr($wa_clean, 0, 1) === '0') {
+                                $wa_clean = '255' . substr($wa_clean, 1);
+                            }
                             $wa_message = t('whatsapp_cart_intro') . "\n";
                             foreach ($_SESSION['cart'] as $item) {
                                 $item_label = $item['name'];
@@ -443,7 +458,7 @@ include 'includes/header.php';
                                 $wa_message .= "▪ " . $item_label . " (" . t('size_label') . ": " . $item['size'] . ", " . t('color_label') . ": " . $item['color'] . ") x" . $item['quantity'] . " @ " . number_format($item['price']) . "\n";
                             }
                             $wa_message .= "\n*" . t('whatsapp_cart_total') . ": Tsh " . number_format($total) . "*\n";
-                            $wa_link = "https://wa.me/255767557234?text=" . urlencode($wa_message);
+                            $wa_link = "https://wa.me/" . $wa_clean . "?text=" . urlencode($wa_message);
                             $wa_message = t('whatsapp_order_intent') . "\n\n";
                             foreach ($_SESSION['cart'] as $item) {
                                 $safeName = trim(preg_replace('/[\r\n\t]+/', ' ', strip_tags((string)($item['name'] ?? t('product')))));
@@ -463,7 +478,7 @@ include 'includes/header.php';
                                 $wa_message .= t('whatsapp_color') . ": {$safeColor}\n";
                                 $wa_message .= t('whatsapp_quantity') . ": {$safeQty}\n\n";
                             }
-                            $wa_link = "https://wa.me/255767557234?text=" . urlencode(trim($wa_message));
+                            $wa_link = "https://wa.me/" . $wa_clean . "?text=" . urlencode(trim($wa_message));
                         ?>
 
                         <input type="hidden" name="payment_method" value="cash_on_delivery">

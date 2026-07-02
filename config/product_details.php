@@ -140,7 +140,7 @@ if ($id !== false && $id !== null && $id > 0) {
                      class="card-img-top rounded" 
                      alt="<?php echo htmlspecialchars($product['name']); ?>"
                      style="object-fit: cover; height: 600px;" 
-                     onerror="this.src='https://via.placeholder.com/600x800?text=No+Image'"
+                     onerror="this.src='uploads/no-image.png'"
                      loading="lazy">
             </div>
             
@@ -377,7 +377,7 @@ function changeImage(src) {
 
 function validateQuantity(input) {
     if (parseInt(input.value) > 3) {
-        alert("Idadi haipaswi kuzidi 3 kwa mkupuo mmoja.");
+        alert("<?php echo htmlspecialchars(t('quantity_limit_message')); ?>");
         input.value = 3;
     }
 }
@@ -387,7 +387,7 @@ function incrementQuantity() {
     if (parseInt(input.value) < 3) {
         input.stepUp();
     } else {
-        alert("Idadi haipaswi kuzidi 3 kwa mkupuo mmoja.");
+        alert("<?php echo htmlspecialchars(t('quantity_limit_message')); ?>");
     }
 }
 

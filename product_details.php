@@ -225,7 +225,7 @@ if ($id !== false && $id !== null && $id > 0) {
             ?>
             <?php if($show_timer): ?>
             <div class="mb-4 p-3 bg-light rounded-3 border border-danger border-opacity-25">
-                <p class="text-danger fw-bold mb-2 small text-uppercase"><i class="bi bi-stopwatch-fill me-1"></i> Ofa inaisha baada ya:</p>
+                <p class="text-danger fw-bold mb-2 small text-uppercase"><i class="bi bi-stopwatch-fill me-1"></i> <?php echo t('offer_ends_in'); ?></p>
                 <div class="d-flex gap-2" id="countdown-timer">
                     <div class="text-center bg-white p-2 rounded shadow-sm border" style="min-width: 60px;">
                         <span class="d-block fw-bold fs-4 text-dark" id="days">00</span><small class="text-muted" style="font-size: 10px;"><?php echo t('days'); ?></small>
@@ -306,11 +306,16 @@ if ($id !== false && $id !== null && $id > 0) {
                     </button>
                     <!-- WhatsApp Button (Njia ya haraka) -->
                     <?php
+                        $wa_raw = !empty($shop_phone) ? $shop_phone : '0767557234';
+                        $wa_clean = preg_replace('/[^0-9]/', '', $wa_raw);
+                        if (substr($wa_clean, 0, 1) === '0') {
+                            $wa_clean = '255' . substr($wa_clean, 1);
+                        }
                         $whatsapp_text = t('whatsapp_order_greeting') . ' ' . $product['name'];
                         if (!empty($product['product_code'])) {
                             $whatsapp_text .= ' (' . t('product_code_label') . ': ' . $product['product_code'] . ')';
                         }
-                        $whatsapp_href = 'https://wa.me/255767557234?text=' . urlencode($whatsapp_text);
+                        $whatsapp_href = 'https://wa.me/' . $wa_clean . '?text=' . urlencode($whatsapp_text);
                     ?>
                     <a href="<?php echo htmlspecialchars($whatsapp_href, ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-success btn-lg rounded-0 text-uppercase tracking-wide py-3">
                         <i class="bi bi-whatsapp"></i> <?php echo t('buy_with_whatsapp'); ?>
@@ -466,7 +471,7 @@ const x = setInterval(function() {
 
   if (distance < 0) {
     clearInterval(x);
-    document.getElementById("countdown-timer").innerHTML = "<span class='text-danger fw-bold'>Ofa imekwisha!</span>";
+    document.getElementById("countdown-timer").innerHTML = "<span class='text-danger fw-bold'><?php echo t('offer_ended'); ?></span>";
   }
 }, 1000);
 <?php endif; ?>

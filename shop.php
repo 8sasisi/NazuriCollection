@@ -7,7 +7,7 @@ $category = isset($_GET['category']) ? $_GET['category'] : '';
 $search_term = isset($_GET['search']) ? trim($_GET['search']) : '';
 $sort_order = isset($_GET['sort']) ? $_GET['sort'] : 'newest';
 
-$allowed_categories = ['abaya', 'gown', 'two_pieces', 'guberi'];
+$allowed_categories = ['abaya', 'gown', 'two_pieces', 'guberi', 'jilbab', 'skirts', 'dresses', 'hijab', 'accessories'];
 if (!in_array($category, $allowed_categories, true)) {
     $category = '';
 }
@@ -49,7 +49,7 @@ switch ($sort_order) {
         break;
 }
 // --- Pagination Logic ---
-$products_per_page = 8; // Idadi ya bidhaa kwa kila ukurasa
+$products_per_page = !empty($site_settings['products_per_page']) ? (int)$site_settings['products_per_page'] : 12;
 
 // Pata jumla ya bidhaa zote zinazoendana na vigezo
 $count_sql = "SELECT COUNT(*) FROM products $whereClause";
@@ -162,7 +162,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <img src="uploads/<?php echo htmlspecialchars($product['image']); ?>" 
                              class="card-img-top" 
                              alt="<?php echo htmlspecialchars($product['name']); ?>"
-                             onerror="this.src='https://via.placeholder.com/300x400?text=No+Image'"
+                             onerror="this.src='uploads/no-image.png'"
                              loading="lazy"
                              >
                     </a>

@@ -90,8 +90,9 @@ if ($initial_theme === null) {
 
     <?php
     // Secure defaults and social metadata (security by design)
-    $meta_description = !empty($site_settings['meta_description']) ? $site_settings['meta_description'] : 'Buy elegant Abaya & Gowns at Nazuri Collections. Quality fabrics, responsive service.';
-    $meta_image = (!empty($shop_logo) && file_exists(__DIR__ . '/../uploads/' . $shop_logo)) ? ('uploads/' . htmlspecialchars($shop_logo)) : 'https://via.placeholder.com/1200x630?text=' . urlencode($shop_name);
+    $meta_description = !empty($site_settings['meta_description']) ? $site_settings['meta_description'] : ($shop_name . ' - Elegant Abayas & Gowns');
+    $meta_image_default = 'uploads/default-og-image.jpg';
+    $meta_image = (!empty($shop_logo) && file_exists(__DIR__ . '/../uploads/' . $shop_logo)) ? ('uploads/' . htmlspecialchars($shop_logo)) : (file_exists(__DIR__ . '/../' . $meta_image_default) ? $meta_image_default : '');
     $site_url = !empty($site_settings['site_url']) ? $site_settings['site_url'] : ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? ''));
     ?>
 

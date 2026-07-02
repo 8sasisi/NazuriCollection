@@ -550,7 +550,7 @@ $pending_reviews = (int) safe_count($conn, "SELECT COUNT(*) FROM reviews WHERE s
                                 </div>
                             </div>
                             <div class="visitor-total text-center">
-                                <small class="text-muted">Jumla Kuu: <strong><?php echo $total_visits ?? 0; ?></strong></small>
+                                <small class="text-muted"><?php echo __('total_colon'); ?> <strong><?php echo $total_visits ?? 0; ?></strong></small>
                             </div>
                         </div>
                     </div>
@@ -642,9 +642,9 @@ $pending_reviews = (int) safe_count($conn, "SELECT COUNT(*) FROM reviews WHERE s
                                 <i class="bi bi-whatsapp"></i>
                             </div>
                             <div>
-                                <h6 class="metric-title text-uppercase fw-bold mb-1">Oda (WhatsApp)</h6>
+                                <h6 class="metric-title text-uppercase fw-bold mb-1"><?php echo __('orders_whatsapp'); ?></h6>
                                 <a href="https://web.whatsapp.com" target="_blank" class="text-white text-decoration-none fw-semibold stretched-link d-inline-flex align-items-center gap-1">
-                                    Fungua WhatsApp Web <i class="bi bi-arrow-right"></i>
+                                    <?php echo __('open_whatsapp_web'); ?> <i class="bi bi-arrow-right"></i>
                                 </a>
                             </div>
                         </div>
@@ -663,9 +663,9 @@ $pending_reviews = (int) safe_count($conn, "SELECT COUNT(*) FROM reviews WHERE s
                                         <span class="sales-trend-icon"><i class="bi bi-graph-up-arrow"></i></span>
                                         <h5 class="fw-bold mb-0"><?php echo __('sales_trend') . ' (' . date('Y') . ')'; ?></h5>
                                     </div>
-                                    <p class="sales-trend-note">Mwenendo wa mapato yaliyothibitishwa kwa kila mwezi.</p>
+                                    <p class="sales-trend-note"><?php echo __('monthly_sales_note'); ?></p>
                                 </div>
-                                <span class="sales-total-pill">Jumla: Tsh <?php echo number_format($annual_sales_total); ?></span>
+                                <span class="sales-total-pill"><?php echo __('total_colon'); ?> Tsh <?php echo number_format($annual_sales_total); ?></span>
                             </div>
                         </div>
                         <div class="card-body p-4">
@@ -687,16 +687,16 @@ $pending_reviews = (int) safe_count($conn, "SELECT COUNT(*) FROM reviews WHERE s
                                     <img src="../uploads/<?php echo htmlspecialchars($top['image']); ?>" 
                                          class="rounded-3 shadow-sm" 
                                          width="50" height="50" style="object-fit: cover;"
-                                         onerror="this.src='https://via.placeholder.com/50'"
-                                         loading="lazy">
-                                    <div class="ms-3 flex-grow-1">
-                                        <h6 class="mb-0 fw-bold small"><?php echo htmlspecialchars($top['name']); ?></h6>
-                                        <small class="text-muted"><?php echo (int) $top['total_sold']; ?> zimeuzwa</small>
+                                         onerror="this.src='../uploads/no-image.png'"
+                                          loading="lazy">
+                                     <div class="ms-3 flex-grow-1">
+                                         <h6 class="mb-0 fw-bold small"><?php echo htmlspecialchars($top['name']); ?></h6>
+                                         <small class="text-muted"><?php echo (int) $top['total_sold']; ?> <?php echo __('units_sold'); ?></small>
                                     </div>
                                     <span class="badge sales-badge rounded-pill fw-bold"><?php echo (int) $top['total_sold']; ?></span>
                                 </li>
                                 <?php endforeach; else: ?>
-                                <li class="list-group-item p-4 text-center text-muted small">Hakuna data ya mauzo bado.</li>
+                                <li class="list-group-item p-4 text-center text-muted small"><?php echo __('no_sales_data_yet'); ?></li>
                                 <?php endif; ?>
                             </ul>
                         </div>
@@ -730,11 +730,11 @@ $pending_reviews = (int) safe_count($conn, "SELECT COUNT(*) FROM reviews WHERE s
                                                 <img src="../uploads/<?php echo htmlspecialchars($product['image']); ?>" 
                                                      class="table-img shadow-sm" 
                                                      alt="Product"
-                                                     onerror="this.src='https://via.placeholder.com/40'"
-                                                     loading="lazy">
-                                            </td>
-                                            <td class="fw-bold"><?php echo htmlspecialchars($product['name']); ?></td>
-                                            <td class="text-muted">Tsh <?php echo number_format($product['price']); ?></td>
+                                                     onerror="this.src='../uploads/no-image.png'"
+                                                      loading="lazy">
+                                             </td>
+                                             <td class="fw-bold"><?php echo htmlspecialchars($product['name']); ?></td>
+                                             <td class="text-muted">Tsh <?php echo number_format($product['price']); ?></td>
                                             <td><span class="badge bg-light text-dark border"><?php echo ucfirst($product['category']); ?></span></td>
                                             <td>
                                                 <?php if(isset($product['status']) && ($product['status'] == 'not_active' || $product['status'] == 'preorder')): ?>

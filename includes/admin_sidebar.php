@@ -22,7 +22,7 @@ $admin_nav_items = [
 $system_nav_items = [
     ['page' => 'register.php', 'href' => 'register.php', 'icon' => 'bi-person-plus-fill', 'label' => __('register_admin_nav')],
     ['page' => 'system_health.php', 'href' => 'system_health.php', 'icon' => 'bi-heart-pulse-fill', 'label' => __('system_health_nav')],
-    ['page' => 'mail_test.php', 'href' => 'mail_test.php', 'icon' => 'bi-envelope-fill', 'label' => 'Mail Test'],
+    ['page' => 'mail_test.php', 'href' => 'mail_test.php', 'icon' => 'bi-envelope-fill', 'label' => __('mail_test')],
     ['page' => 'logs.php', 'href' => 'logs.php', 'icon' => 'bi-shield-check', 'label' => __('logs_nav')],
 ];
 
@@ -201,7 +201,7 @@ if (!defined('ADMIN_LAYOUT_STYLES_RENDERED')) {
                    role="button"
                    aria-expanded="<?php echo $system_menu_active ? 'true' : 'false'; ?>"
                    aria-controls="adminSystemMenuDesktop">
-                    <span><i class="bi bi-hdd-rack-fill me-2"></i> System</span>
+                    <span><i class="bi bi-hdd-rack-fill me-2"></i> <?php echo __('system_menu_label'); ?></span>
                     <i class="bi bi-chevron-down small system-toggle-icon"></i>
                 </a>
                 <div class="collapse <?php echo $system_menu_active ? 'show' : ''; ?>" id="adminSystemMenuDesktop">
@@ -241,7 +241,7 @@ if (!defined('ADMIN_LAYOUT_STYLES_RENDERED')) {
                    role="button"
                    aria-expanded="<?php echo $system_menu_active ? 'true' : 'false'; ?>"
                    aria-controls="adminSystemMenuMobile">
-                    <span><i class="bi bi-hdd-rack-fill me-2"></i> System</span>
+                    <span><i class="bi bi-hdd-rack-fill me-2"></i> <?php echo __('system_menu_label'); ?></span>
                     <i class="bi bi-chevron-down small system-toggle-icon"></i>
                 </a>
                 <div class="collapse <?php echo $system_menu_active ? 'show' : ''; ?>" id="adminSystemMenuMobile">

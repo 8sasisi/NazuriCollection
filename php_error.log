@@ -20,3 +20,5 @@
 [21-Jun-2026 16:14:32 UTC] Mail error (admin): SMTP Error: Could not authenticate.
 [21-Jun-2026 16:17:49 UTC] Mail error (customer): SMTP Error: Could not authenticate.
 [21-Jun-2026 16:17:51 UTC] Mail error (admin): SMTP Error: Could not authenticate.
+[25-Jun-2026 17:15:07 UTC] Mail error (password reset): SMTP Error: Could not connect to SMTP host. Failed to connect to server
+[25-Jun-2026 17:15:07 UTC] Failed to send password reset email to sammsasisi8@gmail.com

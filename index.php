@@ -16,7 +16,7 @@ $sliders = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?php
                 $video_path = !empty($slider['video_path']) ? 'uploads/' . $slider['video_path'] : '';
                 $has_video = $video_path && file_exists(__DIR__ . '/' . $video_path);
-                $fallback_image = (!empty($shop_logo) && file_exists(__DIR__ . '/uploads/' . $shop_logo)) ? ('uploads/' . $shop_logo) : ('https://via.placeholder.com/1600x900?text=' . urlencode($slider['title'] ?? $shop_name));
+                $fallback_image = (!empty($shop_logo) && file_exists(__DIR__ . '/uploads/' . $shop_logo)) ? ('uploads/' . $shop_logo) : 'uploads/default-slider.jpg';
             ?>
             <div class="carousel-item <?php echo ($index == 0) ? 'active' : ''; ?> hero-slide">
                 <?php
@@ -124,7 +124,7 @@ $sliders = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <!-- Background Image with Dark Overlay -->
         <?php
             $promo_rel = 'uploads/promo_banner.jpg';
-            $promo_path = (file_exists(__DIR__ . '/' . $promo_rel)) ? $promo_rel : 'https://via.placeholder.com/1600x400?text=' . urlencode($shop_name . ' Promo');
+            $promo_path = (file_exists(__DIR__ . '/' . $promo_rel)) ? $promo_rel : 'uploads/default-promo.jpg';
         ?>
         <div class="position-absolute top-0 start-0 w-100 h-100" 
              style="background: url('<?php echo $promo_path; ?>') no-repeat center center; background-size: cover; filter: brightness(0.4);">
@@ -150,8 +150,9 @@ $sliders = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
         <div class="row">
             <?php
-            // Vuta bidhaa 4 za mwisho
-            $stmt = $conn->prepare("SELECT * FROM products WHERE status = 'active' ORDER BY created_at DESC LIMIT 4");
+            // Vuta bidhaa za mwisho
+            $home_featured_limit = 4;
+            $stmt = $conn->prepare("SELECT * FROM products WHERE status = 'active' ORDER BY created_at DESC LIMIT " . (int)$home_featured_limit);
             $stmt->execute();
             $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -204,9 +205,10 @@ $sliders = $stmt->fetchAll(PDO::FETCH_ASSOC);
         ];
 
         $is_first_category = true;
+        $home_preorder_limit = 4;
         foreach($preorder_categories as $cat_key => $cat_name):
             // Vuta bidhaa za preorder kwa kila kundi
-            $stmt = $conn->prepare("SELECT * FROM products WHERE status = 'preorder' AND category = :cat ORDER BY created_at DESC LIMIT 4");
+            $stmt = $conn->prepare("SELECT * FROM products WHERE status = 'preorder' AND category = :cat ORDER BY created_at DESC LIMIT " . (int)$home_preorder_limit);
             $stmt->execute([':cat' => $cat_key]);
             $pre_products = $stmt->fetchAll(PDO::FETCH_ASSOC);
             

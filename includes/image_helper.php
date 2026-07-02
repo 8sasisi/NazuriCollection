@@ -9,7 +9,7 @@ function responsive_picture($relativePath, $alt = '', $attrs = [], $widths = [32
     $srcPath = $uploadsRoot . DIRECTORY_SEPARATOR . $relativePath;
     if (!file_exists($srcPath)) {
         // Return a placeholder image tag
-        $placeholder = 'https://via.placeholder.com/800x800?text=' . urlencode($alt ?: 'Image');
+        $placeholder = 'uploads/no-image.png';
         $classAttr = isset($attrs['class']) ? ' class="' . htmlspecialchars($attrs['class'], ENT_QUOTES, 'UTF-8') . '"' : '';
         return '<img src="' . $placeholder . '" alt="' . htmlspecialchars($alt, ENT_QUOTES, 'UTF-8') . '" loading="lazy"' . $classAttr . ' />';
     }

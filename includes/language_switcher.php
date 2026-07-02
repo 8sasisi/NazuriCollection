@@ -115,6 +115,28 @@ if (!function_exists('frontend_ui_translation_map')) {
             'Tafadhali jaza taarifa zote (Jina, Simu, na Njia ya Malipo).' => 'Please fill all fields (Name, Phone, and Payment Method).',
             'Namba ya simu si sahihi. Tafadhali tumia format: 07xxxxxxxx au +2557xxxxxxxx' => 'Invalid phone number. Please use: 07xxxxxxxx or +2557xxxxxxxx',
             'Samahani, oda hii haikupatikana.' => 'Sorry, this order was not found.',
+            // Additional frontend translations
+            'Viungo vya Haraka' => 'Quick Links',
+            'Tufuate' => 'Follow Us',
+            'Saa za Kazi' => 'Business Hours',
+            'Jumatatu - Jumamosi: 8:00 ASUBUI - 7:00 JIONI' => 'Mon - Sat: 8:00 AM - 7:00 PM',
+            'Jumapili: 10:00 ASUBUI - 4:00 JIONI' => 'Sunday: 10:00 AM - 4:00 PM',
+            'Badili Muonekano' => 'Toggle Theme',
+            'Pre-Order' => 'Pre-Order',
+            'Abaya' => 'Abaya',
+            'Gauni' => 'Gown',
+            'Two Pieces' => 'Two Pieces',
+            'Guberi' => 'Guberi',
+            'Oda yako imepokelewa. Admin ataiona moja kwa moja kwenye dashboard.' => 'Your order has been received. The admin will see it directly in the dashboard.',
+            'Kosa: ' => 'Error: ',
+            'Idadi haipaswi kuzidi 3 kwa mkupuo mmoja.' => 'Quantity should not exceed 3 per order.',
+            'quantity_limit_message' => 'Quantity should not exceed 3 per order.',
+            'error_prefix' => 'Error',
+            'Abaya & Magauni' => 'Abaya & Gowns',
+            'English' => 'English',
+            'Kiswahili' => 'Kiswahili',
+            'Previous' => 'Previous',
+            'Next' => 'Next',
         ];
     }
 }

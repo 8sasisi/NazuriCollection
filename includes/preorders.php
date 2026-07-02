@@ -85,7 +85,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <?php foreach($products as $product): ?>
                                 <tr>
                                     <td class="ps-4">
-                                        <img src="../uploads/<?php echo htmlspecialchars($product['image']); ?>" class="table-img shadow-sm" onerror="this.src='https://via.placeholder.com/50'" loading="lazy">
+                                        <img src="../uploads/<?php echo htmlspecialchars($product['image']); ?>" class="table-img shadow-sm" onerror="this.src='../uploads/no-image.png'" loading="lazy">
                                     </td>
                                     <td class="fw-bold"><?php echo htmlspecialchars($product['name']); ?></td>
                                     <td>Tsh <?php echo number_format($product['price']); ?></td>
