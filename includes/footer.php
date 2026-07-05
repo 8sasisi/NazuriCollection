@@ -33,7 +33,7 @@
         <p class="text-center small text-white-50 mb-0">&copy; <?php echo date('Y'); ?> <?php echo htmlspecialchars($shop_name ?? 'Nazuri Collections'); ?>. <?php echo t('all_rights_reserved'); ?></p>
     </div>
 </footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
 
 <!-- Scroll to Top Button -->
 <a href="#" id="scrollToTopBtn" class="btn btn-dark rounded-circle shadow-lg" title="<?php echo t('back_to_top'); ?>">

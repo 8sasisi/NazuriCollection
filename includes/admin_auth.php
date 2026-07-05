@@ -15,7 +15,7 @@ $site_settings = [];
 foreach ($settings_rows as $row) {
     $site_settings[$row['setting_key']] = $row['setting_value'];
 }
-$shop_name = !empty($site_settings['shop_name']) ? $site_settings['shop_name'] : 'Grant Fashions';
+$shop_name = !empty($site_settings['shop_name']) ? $site_settings['shop_name'] : env_value('APP_NAME', 'Nazuri Collections');
 $shop_phone = !empty($site_settings['phone']) ? $site_settings['phone'] : '0767557234';
 $shop_currency = 'Tsh';
 $shop_address = !empty($site_settings['address']) ? $site_settings['address'] : 'Dar es Salaam, Tanzania';

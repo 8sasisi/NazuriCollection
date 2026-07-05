@@ -1,8 +1,8 @@
--- Grant Fashions schema
+-- Nazuri Collections schema
 -- InfinityFree-ready import file
 -- Optional:
--- CREATE DATABASE `if0_41351924_grant_fashions_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
--- USE `if0_41351924_grant_fashions_db`;
+-- CREATE DATABASE `nazuri_collections_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+-- USE `nazuri_collections_db`;
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;

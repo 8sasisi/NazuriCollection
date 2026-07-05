@@ -23,8 +23,8 @@ $en_link = $current_page_for_lang . '?' . http_build_query($query_params);
         <i class="bi bi-translate"></i>
     </button>
     <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
-        <li><a class="dropdown-item <?php echo (($_SESSION['admin_lang'] ?? 'sw') == 'sw') ? 'active' : ''; ?>" href="<?php echo $sw_link; ?>"><img src="https://flagcdn.com/w20/tz.png" class="me-2" alt="TZ Flag"> Kiswahili</a></li>
-        <li><a class="dropdown-item <?php echo (($_SESSION['admin_lang'] ?? 'sw') == 'en') ? 'active' : ''; ?>" href="<?php echo $en_link; ?>"><img src="https://flagcdn.com/w20/gb.png" class="me-2" alt="GB Flag"> English</a></li>
+        <li><a class="dropdown-item <?php echo (($_SESSION['admin_lang'] ?? 'sw') == 'sw') ? 'active' : ''; ?>" href="<?php echo $sw_link; ?>"><img src="../assets/img/tz.png" class="me-2" alt="TZ Flag"> Kiswahili</a></li>
+        <li><a class="dropdown-item <?php echo (($_SESSION['admin_lang'] ?? 'sw') == 'en') ? 'active' : ''; ?>" href="<?php echo $en_link; ?>"><img src="../assets/img/gb.png" class="me-2" alt="GB Flag"> English</a></li>
     </ul>
 </div>
 

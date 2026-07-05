@@ -75,10 +75,10 @@ $report_mailto_link = app_mailto_link($report_recipient_email, $report_subject, 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ripoti ya Mauzo | Nazuri Admin</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/icons/bootstrap-icons.css">
+    <link href="../assets/fonts/fonts.css" rel="stylesheet">
+    <script src="../assets/js/html2pdf.bundle.min.js"></script>
     <style>
         body { font-family: 'Poppins', sans-serif; background-color: #f8f9fa; }
         .sidebar { min-height: 100vh; background: #1a1d20; color: #fff; }
@@ -206,7 +206,7 @@ $report_mailto_link = app_mailto_link($report_recipient_email, $report_subject, 
         </div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/js/bootstrap.bundle.min.js"></script>
 <script>
     function generatePDF() {
         const element = document.getElementById('report-content');

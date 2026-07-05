@@ -37,7 +37,7 @@ foreach ($settings_rows as $row) {
     $site_settings[$row['setting_key']] = $row['setting_value'];
 }
 
-$shop_name = !empty($site_settings['shop_name']) ? $site_settings['shop_name'] : 'Nazuri Collections';
+$shop_name = !empty($site_settings['shop_name']) ? $site_settings['shop_name'] : env_value('APP_NAME', 'Nazuri Collections');
 $shop_logo = !empty($site_settings['logo']) ? $site_settings['logo'] : '';
 $shop_phone = !empty($site_settings['phone']) ? $site_settings['phone'] : '0767557234';
 
@@ -121,9 +121,9 @@ if ($initial_theme === null) {
     </script>
 
     <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/icons/bootstrap-icons.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
     <script>
@@ -173,7 +173,7 @@ if ($initial_theme === null) {
     </a>
 
     <!-- 3. Desktop Navigation Links (Hidden on Mobile) -->
-    <div class="collapse navbar-collapse d-none d-lg-flex ms-lg-4" id="desktopNav">
+    <div class="collapse navbar-collapse d-none d-lg-flex" id="desktopNav" style="margin-left:3.5rem;">
       <ul class="navbar-nav gap-lg-4">
         <li class="nav-item"><a class="nav-link" href="index.php"><?php echo t('home'); ?></a></li>
         

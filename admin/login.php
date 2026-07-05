@@ -79,7 +79,7 @@ if ($admin_exists == 0) {
     // Ongeza admin wa kwanza (default)
      $default_username = 'testadmin';
      $default_email = 'testadmin@example.local';
-     $default_phone = '0712345678';
+     $default_phone = '0767557234';
      // Stronger test password for local testing. Change after use.
      $default_password = 'Test@1234';
      $hashed_password = password_hash($default_password, PASSWORD_DEFAULT);
@@ -183,9 +183,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login | Nazuri Collections</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/icons/bootstrap-icons.css">
+    <link href="../assets/fonts/fonts.css" rel="stylesheet">
     <style>
         body { font-family: 'Poppins', sans-serif; background-color: #f8f9fa; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
         .login-card { width: 100%; max-width: 450px; border: none; border-radius: 20px; }
@@ -224,7 +224,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </form>
         </div>
     </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/js/bootstrap.bundle.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const passwordInput = document.getElementById('password');
