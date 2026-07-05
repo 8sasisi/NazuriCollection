@@ -71,23 +71,13 @@ try {
     $conn->exec("UPDATE admins SET role = 'Super Admin' ORDER BY id ASC LIMIT 1");
 }
 
-// 2. Angalia kama kuna admin yeyote, kama hakuna, ongeza default admin
+// 2. Angalia kama kuna admin yeyote — onya kama hakuna admin
 $stmt_check = $conn->query("SELECT COUNT(*) FROM admins");
 $admin_exists = $stmt_check->fetchColumn();
 
 if ($admin_exists == 0) {
-    // Ongeza admin wa kwanza (default)
-     $default_username = 'testadmin';
-     $default_email = 'testadmin@example.local';
-     $default_phone = '0767557234';
-     // Stronger test password for local testing. Change after use.
-     $default_password = 'Test@1234';
-     $hashed_password = password_hash($default_password, PASSWORD_DEFAULT);
-
-     $insert_sql = "INSERT INTO admins (username, email, phone, password, role) VALUES (?, ?, ?, ?, 'Super Admin')";
-     $stmt_insert = $conn->prepare($insert_sql);
-     $stmt_insert->execute([$default_username, $default_email, $default_phone, $hashed_password]);
- };
+    die("Hakuna msimamizi kwenye mfumo. Tafadhali ingiza moja kwa moja kwenye database au tumia seeder.");
+};
 
 // Ikiwa admin tayari ameingia, mpeleke kwenye dashboard
 if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
