@@ -171,7 +171,7 @@ if (!defined('ADMIN_LAYOUT_STYLES_RENDERED')) {
 ?>
 <div class="admin-mobile-topbar d-md-none">
     <div>
-        <p class="admin-mobile-brand">GRANT <span class="text-warning">ADMIN</span></p>
+        <p class="admin-mobile-brand">Nazuri <span class="text-warning">Collection</span></p>
         <small class="text-muted"><?php echo htmlspecialchars($_SESSION['admin_username'] ?? 'Admin'); ?></small>
     </div>
     <button class="btn btn-dark rounded-circle shadow-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminMobileSidebar" aria-controls="adminMobileSidebar" aria-label="Open admin menu">
@@ -181,7 +181,7 @@ if (!defined('ADMIN_LAYOUT_STYLES_RENDERED')) {
 
 <div class="col-md-3 col-lg-2 px-0 sidebar d-none d-md-block position-fixed">
     <div class="p-4 border-bottom border-secondary">
-        <h4 class="fw-bold mb-0" style="font-family: 'Playfair Display', serif;">GRANT <span class="text-warning">ADMIN</span></h4>
+        <h4 class="fw-bold mb-0" style="font-family: 'Playfair Display', serif;">Nazuri <span class="text-warning">Collection</span></h4>
     </div>
     <div class="p-3 mt-3 sidebar-menu">
         <ul class="nav flex-column">
@@ -218,7 +218,7 @@ if (!defined('ADMIN_LAYOUT_STYLES_RENDERED')) {
 <div class="offcanvas offcanvas-start d-md-none" tabindex="-1" id="adminMobileSidebar" aria-labelledby="adminMobileSidebarLabel">
     <div class="offcanvas-header border-bottom">
         <div>
-            <h5 class="offcanvas-title fw-bold" id="adminMobileSidebarLabel" style="font-family: 'Playfair Display', serif;">GRANT <span class="text-warning">ADMIN</span></h5>
+            <h5 class="offcanvas-title fw-bold" id="adminMobileSidebarLabel" style="font-family: 'Playfair Display', serif;">Nazuri <span class="text-warning">Collection</span></h5>
             <small class="text-muted"><?php echo htmlspecialchars($_SESSION['admin_username'] ?? 'Admin'); ?></small>
         </div>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -256,3 +256,83 @@ if (!defined('ADMIN_LAYOUT_STYLES_RENDERED')) {
         </ul>
     </div>
 </div>
+
+<!-- Idle Timeout Modal & Script -->
+<div class="modal fade" id="idleLogoutModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-body text-center p-5">
+                <div class="mb-4">
+                    <span class="display-1 text-warning"><i class="bi bi-exclamation-triangle-fill"></i></span>
+                </div>
+                <h4 class="fw-bold mb-2">Una muda mchache uliobaki!</h4>
+                <p class="text-muted mb-1">Hujafanya shughuli yoyote kwa muda mrefu.</p>
+                <p class="text-muted mb-4">Utaondolewa kiotomatiki baada ya <strong id="idleCountdown">5</strong> sekunde.</p>
+                <button id="idleStayLoggedIn" class="btn btn-lg btn-dark rounded-pill px-5 fw-semibold">
+                    <i class="bi bi-hand-index-thumb me-2"></i> Nipo Hapa
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    const IDLE_TIMEOUT = 5 * 60 * 1000; // dakika 5
+    const COUNTDOWN_SECONDS = 5;
+
+    let idleTimer = null;
+    let countdownTimer = null;
+    let countdownValue = COUNTDOWN_SECONDS;
+
+    const modalEl = document.getElementById('idleLogoutModal');
+    const countdownEl = document.getElementById('idleCountdown');
+    const stayBtn = document.getElementById('idleStayLoggedIn');
+
+    let modal = null;
+    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+        modal = new bootstrap.Modal(modalEl, { backdrop: 'static', keyboard: false });
+    }
+
+    function resetIdleTimer() {
+        if (countdownTimer) {
+            clearInterval(countdownTimer);
+            countdownTimer = null;
+        }
+        if (modal && modal._isShown) {
+            modal.hide();
+        }
+        if (idleTimer) clearTimeout(idleTimer);
+        idleTimer = setTimeout(showWarning, IDLE_TIMEOUT);
+    }
+
+    function showWarning() {
+        countdownValue = COUNTDOWN_SECONDS;
+        countdownEl.textContent = countdownValue;
+        if (modal) modal.show();
+
+        countdownTimer = setInterval(function() {
+            countdownValue--;
+            countdownEl.textContent = countdownValue;
+            if (countdownValue <= 0) {
+                clearInterval(countdownTimer);
+                countdownTimer = null;
+                if (modal) modal.hide();
+                fetch('logout.php?idle=1').then(function() {
+                    window.location.href = 'login.php?idle=1';
+                }).catch(function() {
+                    window.location.href = 'login.php?idle=1';
+                });
+            }
+        }, 1000);
+    }
+
+    stayBtn.addEventListener('click', resetIdleTimer);
+
+    ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'].forEach(function(ev) {
+        document.addEventListener(ev, resetIdleTimer, { passive: true });
+    });
+
+    resetIdleTimer();
+})();
+</script>

@@ -191,6 +191,22 @@ $pending_reviews = (int) safe_count($conn, "SELECT COUNT(*) FROM reviews WHERE s
             transition: transform 0.25s ease, box-shadow 0.25s ease;
             overflow: hidden;
         }
+        .stat-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+        }
+        .stat-card .card-body {
+            transition: transform 0.3s ease;
+        }
+        .stat-card:hover .card-body {
+            transform: scale(1.01);
+        }
+        .stat-card .icon-square i {
+            transition: transform 0.3s ease;
+        }
+        .stat-card:hover .icon-square i {
+            transform: scale(1.25) rotate(-5deg);
+        }
         /* Restored stat layout with focused icon & responsive tweaks */
         .stat-card .card-body { display: flex; align-items: center; gap: 1rem; padding: 1rem; }
         /* Make icons circular */
@@ -500,8 +516,8 @@ $pending_reviews = (int) safe_count($conn, "SELECT COUNT(*) FROM reviews WHERE s
             <!-- Welcome Section -->
             <div class="admin-page-header dashboard-hero d-flex justify-content-between align-items-center mb-4">
                 <div class="position-relative">
-                    <h2 class="dashboard-title fw-bold mb-1"><?php echo __('dashboard'); ?></h2>
-                    <p class="dashboard-subtitle"><?php echo __('welcome_message'); ?></p>
+                    <h2 class="dashboard-title fw-bold mb-1">Karibu, <?php echo htmlspecialchars($_SESSION['admin_username'] ?? 'Admin'); ?></h2>
+                    <p class="dashboard-subtitle">Paneli ya usimamizi wa Nazuri Collection</p>
                 </div>
                 <div class="admin-page-actions d-flex gap-2 position-relative">
                     <?php include __DIR__ . '/../includes/admin_top_actions.php'; ?>

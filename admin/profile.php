@@ -20,6 +20,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $username = trim($_POST['username']);
     $email = trim($_POST['email']);
+    // Only Super Admin can change email; force existing email for others
+    $is_super = isset($_SESSION['admin_role']) && $_SESSION['admin_role'] === 'Super Admin';
+    if (!$is_super) {
+        $stmt_cur = $conn->prepare("SELECT email FROM admins WHERE id = ?");
+        $stmt_cur->execute([$admin_id]);
+        $email = $stmt_cur->fetchColumn();
+    }
     $phone = trim($_POST['phone']);
     $new_password = $_POST['new_password'];
     $confirm_password = $_POST['confirm_password'];
@@ -27,6 +34,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Validation
     if (empty($username) || empty($email) || empty($phone)) {
         $message = "Tafadhali jaza jina, barua pepe na simu.";
+        $msg_type = "danger";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $message = "Barua pepe si sahihi.";
+        $msg_type = "danger";
+    } elseif (!preg_match('/^(\+?255[67]\d{8}|0[67]\d{8})$/', $phone)) {
+        $message = "Namba ya simu si sahihi. Tumia format: 07xxxxxxxx au +2557xxxxxxxx";
         $msg_type = "danger";
     } else {
         // Check if username or email exists for other users
@@ -142,11 +155,11 @@ if (!$admin) {
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Namba ya Simu</label>
-                                <input type="tel" name="phone" class="form-control" value="<?php echo htmlspecialchars($admin['phone']); ?>" required>
+                                <input type="tel" name="phone" class="form-control" value="<?php echo htmlspecialchars($admin['phone']); ?>" required pattern="^(\+?255|0)[67]\d{8}$" title="Tumia format: 07xxxxxxxx au +2557xxxxxxxx">
                             </div>
                             <div class="col-12 mb-3">
                                 <label class="form-label fw-bold">Barua Pepe (Email)</label>
-                                <input type="email" name="email" class="form-control" value="<?php echo htmlspecialchars($admin['email']); ?>" required>
+                                <input type="email" name="email" class="form-control" value="<?php echo htmlspecialchars($admin['email']); ?>" <?php echo (!isset($_SESSION['admin_role']) || $_SESSION['admin_role'] !== 'Super Admin') ? 'readonly' : ''; ?> required>
                             </div>
                         </div>
 

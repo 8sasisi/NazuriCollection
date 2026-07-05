@@ -45,4 +45,10 @@ function decrypt_order_pii(array &$order): void {
     if (isset($order['customer_phone'])) {
         $order['customer_phone'] = decrypt_data($order['customer_phone']);
     }
+    if (isset($order['payer_phone'])) {
+        $decrypted = decrypt_data($order['payer_phone']);
+        if ($decrypted !== '') {
+            $order['payer_phone'] = $decrypted;
+        }
+    }
 }

@@ -156,7 +156,7 @@ if (isset($_POST['place_order'])) {
     }
 
     // Hakiki namba ya simu (Format ya Tanzania: 0xxxxxxxxx au +255xxxxxxxxx) na namba za kimataifa
-    if (!preg_match('/^(\+?[1-9]\d{8,14}|0[1-9]\d{8})$/', $phone) || !preg_match('/^(\+?[1-9]\d{8,14}|0[1-9]\d{8})$/', $payer_phone)) {
+    if (!preg_match('/^(\+?255[67]\d{8}|0[67]\d{8})$/', $phone) || !preg_match('/^(\+?255[67]\d{8}|0[67]\d{8})$/', $payer_phone)) {
         echo "<script>alert('" . addslashes(t('invalid_phone_format')) . "'); window.history.back();</script>";
         exit();
     }
@@ -192,7 +192,7 @@ if (isset($_POST['place_order'])) {
 
             // Ingiza kwenye orders (including payer_phone, customer_email) — PII encrypted with AES-256
             $stmt = $conn->prepare("INSERT INTO orders (public_id, customer_name, customer_email, customer_phone, payer_phone, total_amount, payment_method, order_status) VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')");
-            $stmt->execute([$public_id, $name, encrypt_data($email), encrypt_data($phone), $payer_phone, $total_amount, $payment_method]);
+            $stmt->execute([$public_id, $name, encrypt_data($email), encrypt_data($phone), encrypt_data($payer_phone), $total_amount, $payment_method]);
             $order_id = $conn->lastInsertId();
 
             // Ingiza kwenye order_items
@@ -523,11 +523,11 @@ include 'includes/header.php';
                     </div>
                     <div class="mb-3">
                         <label class="form-label"><?php echo t('phone_number'); ?></label>
-                        <input type="tel" name="customer_phone" class="form-control" required placeholder="<?php echo t('phone_example'); ?>">
+                        <input type="tel" name="customer_phone" class="form-control" required pattern="^(\+?255|0)[67]\d{8}$" title="Tumia format: 07xxxxxxxx au +2557xxxxxxxx" placeholder="<?php echo t('phone_example'); ?>">
                     </div>
                     <div class="mb-3">
                         <label class="form-label"><?php echo t('payer_phone_label'); ?></label>
-                        <input type="tel" name="payer_phone" class="form-control" required placeholder="<?php echo t('phone_example'); ?>">
+                        <input type="tel" name="payer_phone" class="form-control" required pattern="^(\+?255|0)[67]\d{8}$" title="Tumia format: 07xxxxxxxx au +2557xxxxxxxx" placeholder="<?php echo t('phone_example'); ?>">
                     </div>
                     <input type="hidden" name="payment_method" id="modal_payment_method" value="cash_on_delivery">
                 </div>
@@ -543,9 +543,23 @@ include 'includes/header.php';
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const directOrderBtn = document.getElementById('directOrderBtn');
+    const orderForm = document.getElementById('orderForm');
+    if (orderForm) {
+        orderForm.addEventListener('submit', function(e) {
+            var phoneInputs = orderForm.querySelectorAll('input[type="tel"]');
+            for (var i = 0; i < phoneInputs.length; i++) {
+                var val = phoneInputs[i].value.replace(/[^0-9+]/g, '');
+                if (!/^(\+?255|0)[67]\d{8}$/.test(val)) {
+                    e.preventDefault();
+                    alert('Namba ya simu si sahihi. Tumia format: 07xxxxxxxx au +2557xxxxxxxx');
+                    phoneInputs[i].focus();
+                    return false;
+                }
+            }
+        });
+    }
 
     directOrderBtn.addEventListener('click', function() {
-        // Payment is simplified to Cash on Delivery; no selection required
         document.getElementById('modal_payment_method').value = 'cash_on_delivery';
         var myModal = new bootstrap.Modal(document.getElementById('orderModal'));
         myModal.show();

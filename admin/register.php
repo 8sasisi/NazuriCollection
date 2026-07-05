@@ -86,6 +86,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !$limit_reached) {
         die("Security Error: Invalid CSRF Token.");
     }
 
+    // Only Super Admin can register new admins
+    if (!isset($_SESSION['admin_role']) || $_SESSION['admin_role'] !== 'Super Admin') {
+        $message = "Huna ruhusa ya kusajili admin mpya. Wasiwasiliana na Super Admin.";
+        $msg_type = "danger";
+    } else {
+
     $username = trim($_POST['username']);
     $email = trim($_POST['email']);
     $phone = trim($_POST['phone']);
@@ -98,6 +104,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !$limit_reached) {
         $msg_type = "danger";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $message = "Tafadhali ingiza anwani sahihi ya barua pepe.";
+        $msg_type = "danger";
+    } elseif (!preg_match('/^(\+?255[67]\d{8}|0[67]\d{8})$/', $phone)) {
+        $message = "Namba ya simu si sahihi. Tumia format: 07xxxxxxxx au +2557xxxxxxxx";
         $msg_type = "danger";
     } elseif (strlen($password) < 6) {
         $message = "Nenosiri linapaswa kuwa na angalau herufi 6.";
@@ -129,6 +138,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !$limit_reached) {
                 $message = "Kosa la Database: " . $e->getMessage();
                 $msg_type = "danger";
             }
+        }
+    }
+    }
+}
+
+// Handle Edit Admin
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_admin'])) {
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("Security Error: Invalid CSRF Token.");
+    }
+    if ($_SESSION['admin_role'] !== 'Super Admin') {
+        $message = "Huna ruhusa ya kuhariri admin.";
+        $msg_type = "danger";
+    } else {
+        $edit_id = (int)$_POST['edit_admin_id'];
+        $edit_username = trim($_POST['edit_username']);
+        $edit_email = trim($_POST['edit_email']);
+        $edit_phone = trim($_POST['edit_phone']);
+        $edit_role = $_POST['edit_role'];
+
+        if (empty($edit_username) || empty($edit_email) || empty($edit_phone)) {
+            $message = "Tafadhali jaza sehemu zote.";
+            $msg_type = "danger";
+        } elseif (!filter_var($edit_email, FILTER_VALIDATE_EMAIL)) {
+            $message = "Barua pepe si sahihi.";
+            $msg_type = "danger";
+        } elseif (!preg_match('/^(\+?255[67]\d{8}|0[67]\d{8})$/', $edit_phone)) {
+            $message = "Namba ya simu si sahihi.";
+            $msg_type = "danger";
+        } else {
+            $stmt = $conn->prepare("UPDATE admins SET username = ?, email = ?, phone = ?, role = ? WHERE id = ?");
+            $stmt->execute([$edit_username, $edit_email, $edit_phone, $edit_role, $edit_id]);
+            $message = "Admin amesasishwa kikamilifu.";
+            $msg_type = "success";
         }
     }
 }
@@ -206,7 +249,7 @@ $admins_list = $stmt_list->fetchAll(PDO::FETCH_ASSOC);
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label fw-bold">Namba ya Simu</label>
-                                    <input type="tel" name="phone" class="form-control" required placeholder="Mfano: 0712345678">
+                                    <input type="tel" name="phone" class="form-control" required pattern="^(\+?255|0)[67]\d{8}$" title="Tumia format: 07xxxxxxxx au +2557xxxxxxxx" placeholder="Mfano: 0712345678">
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label class="form-label fw-bold">Barua Pepe (Email)</label>
@@ -234,13 +277,17 @@ $admins_list = $stmt_list->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             </div>
 
-            <!-- Orodha ya Admins -->
+            <!-- Tafuta Admin -->
             <div class="card border-0 shadow-sm rounded-4 mt-5">
-                <div class="card-header bg-white py-3 px-4 border-bottom">
+                <div class="card-header bg-white py-3 px-4 border-bottom d-flex flex-wrap justify-content-between align-items-center gap-2">
                     <h5 class="fw-bold mb-0">Orodha ya Wasimamizi (<?php echo $admin_count; ?>/3)</h5>
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-search text-muted"></i>
+                        <input type="text" id="adminSearch" class="form-control form-control-sm" placeholder="Tafuta kwa jina, email au simu..." style="width:260px;">
+                    </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
+                    <table class="table table-hover align-middle mb-0" id="adminTable">
                         <thead class="bg-light">
                             <tr>
                                 <th class="ps-4">Username</th>
@@ -252,14 +299,23 @@ $admins_list = $stmt_list->fetchAll(PDO::FETCH_ASSOC);
                         </thead>
                         <tbody>
                             <?php foreach($admins_list as $admin): ?>
-                            <tr>
+                            <tr class="admin-row">
                                 <td class="ps-4 fw-bold"><?php echo htmlspecialchars($admin['username']); ?> <?php if($admin['id'] == $_SESSION['admin_id']) echo '<span class="badge bg-success ms-2">Wewe</span>'; ?></td>
-                                <td><?php echo htmlspecialchars($admin['email']); ?></td>
-                                <td><?php echo htmlspecialchars($admin['phone']); ?></td>
+                                <td class="admin-email"><?php echo htmlspecialchars($admin['email']); ?></td>
+                                <td class="admin-phone"><?php echo htmlspecialchars($admin['phone']); ?></td>
                                 <td><span class="badge <?php echo ($admin['role'] == 'Super Admin') ? 'bg-dark' : 'bg-secondary'; ?>"><?php echo htmlspecialchars($admin['role']); ?></span></td>
                                 <td class="text-end pe-4">
                                     <?php if($admin['id'] != $_SESSION['admin_id']): ?>
                                         <?php if($_SESSION['admin_role'] == 'Super Admin'): ?>
+                                            <!-- Edit Button -->
+                                            <button class="btn btn-sm btn-outline-info me-1" title="Hariri" data-bs-toggle="modal" data-bs-target="#editAdminModal"
+                                                data-id="<?php echo $admin['id']; ?>"
+                                                data-username="<?php echo htmlspecialchars($admin['username']); ?>"
+                                                data-email="<?php echo htmlspecialchars($admin['email']); ?>"
+                                                data-phone="<?php echo htmlspecialchars($admin['phone']); ?>"
+                                                data-role="<?php echo htmlspecialchars($admin['role']); ?>">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
                                             <!-- Change Role Button -->
                                             <?php if($admin['role'] == 'Editor'): ?>
                                                 <a href="register.php?change_role_id=<?php echo $admin['id']; ?>&new_role=Super Admin&csrf_token=<?php echo $_SESSION['csrf_token']; ?>" class="btn btn-sm btn-outline-primary me-1" title="Pandisha Cheo"><i class="bi bi-arrow-up-circle"></i></a>
@@ -284,6 +340,47 @@ $admins_list = $stmt_list->fetchAll(PDO::FETCH_ASSOC);
                     </table>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Admin Modal -->
+<div class="modal fade" id="editAdminModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="register.php">
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                <input type="hidden" name="edit_admin_id" id="edit_admin_id" value="">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">Hariri Msimamizi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Jina la Mtumiaji (Username)</label>
+                        <input type="text" name="edit_username" id="edit_username" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Barua Pepe (Email)</label>
+                        <input type="email" name="edit_email" id="edit_email" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Namba ya Simu</label>
+                        <input type="tel" name="edit_phone" id="edit_phone" class="form-control" required pattern="^(\+?255|0)[67]\d{8}$" title="Tumia format: 07xxxxxxxx au +2557xxxxxxxx">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Role (Cheo)</label>
+                        <select name="edit_role" id="edit_role" class="form-select" required>
+                            <option value="Editor">Editor (Anaweza kuhariri bidhaa)</option>
+                            <option value="Super Admin">Super Admin (Anaweza kufuta admins)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ghairi</button>
+                    <button type="submit" name="edit_admin" class="btn btn-dark">Hifadhi Mabadiliko</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -312,6 +409,34 @@ $admins_list = $stmt_list->fetchAll(PDO::FETCH_ASSOC);
                 themeToggle.classList.replace('btn-outline-light', 'btn-outline-dark');
             }
         });
+
+        // Search admin filter
+        const searchInput = document.getElementById('adminSearch');
+        const rows = document.querySelectorAll('.admin-row');
+        if (searchInput) {
+            searchInput.addEventListener('keyup', function() {
+                const q = this.value.toLowerCase().trim();
+                rows.forEach(function(row) {
+                    const username = row.querySelector('td:first-child')?.textContent.toLowerCase() || '';
+                    const email = row.querySelector('.admin-email')?.textContent.toLowerCase() || '';
+                    const phone = row.querySelector('.admin-phone')?.textContent.toLowerCase() || '';
+                    row.style.display = (q === '' || username.includes(q) || email.includes(q) || phone.includes(q)) ? '' : 'none';
+                });
+            });
+        }
+
+        // Edit modal — populate fields
+        const editModal = document.getElementById('editAdminModal');
+        if (editModal) {
+            editModal.addEventListener('show.bs.modal', function(e) {
+                const btn = e.relatedTarget;
+                document.getElementById('edit_admin_id').value = btn.getAttribute('data-id');
+                document.getElementById('edit_username').value = btn.getAttribute('data-username');
+                document.getElementById('edit_email').value = btn.getAttribute('data-email');
+                document.getElementById('edit_phone').value = btn.getAttribute('data-phone');
+                document.getElementById('edit_role').value = btn.getAttribute('data-role');
+            });
+        }
     });
 </script>
 </body>

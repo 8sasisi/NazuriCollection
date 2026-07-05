@@ -199,9 +199,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="card login-card shadow-lg">
         <div class="card-body p-5">
             <div class="text-center mb-4">
-                <h2 class="fw-bold" style="font-family: 'Playfair Display', serif;">GRANT <span class="text-warning">ADMIN</span></h2>
+                <h2 class="fw-bold" style="font-family: 'Playfair Display', serif;">Nazuri <span class="text-warning">Collection</span></h2>
                 <p class="text-muted">Ingia kwenye paneli ya usimamizi.</p>
             </div>
+            <?php if(isset($_GET['idle'])): ?>
+                <div class="alert alert-warning" role="alert"><i class="bi bi-clock-history me-2"></i> Umeondolewa kiotomatiki kwa sababu haukufanya shughuli kwa muda mrefu.</div>
+            <?php endif; ?>
             <?php if(!empty($error_message)): ?>
                 <div class="alert alert-danger" role="alert"><i class="bi bi-exclamation-triangle-fill me-2"></i> <?php echo $error_message; ?></div>
             <?php endif; ?>

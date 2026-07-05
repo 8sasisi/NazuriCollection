@@ -31,6 +31,9 @@ if (!empty($whereClauses)) {
 
 // Handle CSV Export
 if (isset($_GET['export']) && $_GET['export'] == 'csv') {
+    if (!isset($_GET['csrf_token']) || !hash_equals($_SESSION['csrf_token'] ?? '', $_GET['csrf_token'])) {
+        die("Security Error: Invalid CSRF Token.");
+    }
     header('Content-Type: text/csv; charset=utf-8');
     header('Content-Disposition: attachment; filename=nazuri_collections_orders.csv');
 
@@ -184,7 +187,7 @@ if (count($orders) > 0) {
                 <h2 class="fw-bold mb-0">Oda za Wateja</h2>
                 <div class="admin-page-actions d-flex align-items-center gap-2">
                     <?php include __DIR__ . '/../includes/admin_top_actions.php'; ?>
-                    <a href="orders.php?export=csv&start_date=<?php echo $start_date; ?>&end_date=<?php echo $end_date; ?>" class="btn btn-success rounded-pill px-4">
+                    <a href="orders.php?export=csv&csrf_token=<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? ''); ?>&start_date=<?php echo $start_date; ?>&end_date=<?php echo $end_date; ?>" class="btn btn-success rounded-pill px-4">
                         <i class="bi bi-file-earmark-excel me-2"></i> Export to CSV
                     </a>
                 </div>

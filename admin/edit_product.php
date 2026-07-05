@@ -126,11 +126,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 for ($i = 0; $i < $total_files; $i++) {
                     $g_name = basename($_FILES['gallery']['name'][$i]);
-                    if (!empty($g_name)) {
-                        $g_new_name = uniqid() . '_g' . $i . '.' . strtolower(pathinfo($g_name, PATHINFO_EXTENSION));
-                        if (move_uploaded_file($_FILES['gallery']['tmp_name'][$i], $target_dir . $g_new_name)) {
-                            $stmt_gallery->execute([$id, $g_new_name]);
-                        }
+                    if (empty($g_name)) continue;
+                    $g_file = [
+                        'name' => $_FILES['gallery']['name'][$i],
+                        'type' => $_FILES['gallery']['type'][$i],
+                        'tmp_name' => $_FILES['gallery']['tmp_name'][$i],
+                        'error' => $_FILES['gallery']['error'][$i],
+                        'size' => $_FILES['gallery']['size'][$i],
+                    ];
+                    list($g_ok, $g_msg,) = validate_upload_file($g_file, ['image/jpeg','image/png','image/webp','image/gif'], 5 * 1024 * 1024);
+                    if (!$g_ok) {
+                        $message = "Picha ya gallery #$i: $g_msg";
+                        $msg_type = "danger";
+                        break;
+                    }
+                    $g_new_name = uniqid() . '_g' . $i . '.' . strtolower(pathinfo($g_name, PATHINFO_EXTENSION));
+                    if (move_uploaded_file($_FILES['gallery']['tmp_name'][$i], $target_dir . $g_new_name)) {
+                        $stmt_gallery->execute([$id, $g_new_name]);
                     }
                 }
             }

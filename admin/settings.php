@@ -15,13 +15,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         die("Security Error: Invalid CSRF Token.");
     }
 
+    $phone = trim($_POST['phone']);
+    $email = trim($_POST['email']);
+
+    if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $message = "Barua pepe si sahihi.";
+        $msg_type = "danger";
+    } elseif ($phone !== '' && !preg_match('/^(\+?255[67]\d{8}|0[67]\d{8})$/', $phone)) {
+        $message = "Namba ya simu si sahihi. Tumia format: 07xxxxxxxx au +2557xxxxxxxx";
+        $msg_type = "danger";
+    } else {
+
     $settings = [
         'shop_name' => $_POST['shop_name'],
-        'phone' => $_POST['phone'],
-        'email' => $_POST['email'],
+        'phone' => $phone,
+        'email' => $email,
         'address' => $_POST['address'],
         'instagram' => $_POST['instagram'],
         'facebook' => $_POST['facebook'],
+        'whatsapp' => $_POST['whatsapp'],
         'default_language' => $_POST['default_language']
     ];
 
@@ -75,6 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $conn->rollBack();
         $message = "Kosa: " . $e->getMessage();
         $msg_type = "danger";
+    }
     }
     }
 }
@@ -174,7 +187,7 @@ function get_setting($key, $data) {
                         <div class="row mb-4">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Namba ya Simu</label>
-                                <input type="text" name="phone" class="form-control" value="<?php echo get_setting('phone', $current_settings); ?>" placeholder="Mfano: 0712345678">
+                                <input type="tel" name="phone" class="form-control" value="<?php echo get_setting('phone', $current_settings); ?>" pattern="^(\+?255|0)[67]\d{8}$" title="Tumia format: 07xxxxxxxx au +2557xxxxxxxx" placeholder="Mfano: 0712345678">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Barua Pepe (Email)</label>
@@ -187,6 +200,10 @@ function get_setting($key, $data) {
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Facebook Link</label>
                                 <input type="text" name="facebook" class="form-control" value="<?php echo get_setting('facebook', $current_settings); ?>" placeholder="https://facebook.com/...">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">WhatsApp Link</label>
+                                <input type="text" name="whatsapp" class="form-control" value="<?php echo get_setting('whatsapp', $current_settings); ?>" placeholder="https://wa.me/255767557234">
                             </div>
                         </div>
 
